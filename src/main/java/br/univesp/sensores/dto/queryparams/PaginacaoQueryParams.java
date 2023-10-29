@@ -1,5 +1,6 @@
 package br.univesp.sensores.dto.queryparams;
 
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.QueryParam;
 
 public class PaginacaoQueryParams {
@@ -27,5 +28,14 @@ public class PaginacaoQueryParams {
 		if (nroPagina == null || nroPagina < 1)
 			this.nroPagina = 1;
 		return this.nroPagina;
+	}
+	
+	/**
+	 * Auxiliar a paginação na JPA.
+	 */
+	public <T> TypedQuery<T> configurarPaginacao(TypedQuery<T> typedQuery) {
+		return typedQuery
+		.setFirstResult(this.getNroLinhas() * (this.getNroPagina() - 1))
+		.setMaxResults(nroLinhas);
 	}
 }

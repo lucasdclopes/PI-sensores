@@ -18,7 +18,7 @@ public class MedicaoSensor implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idMedicao;
+	private Long idMedicao;
 	private BigDecimal vlTemperatura;
 	private BigDecimal vlUmidade;
 	private LocalDateTime dtMedicao ;
@@ -42,7 +42,7 @@ public class MedicaoSensor implements Serializable {
 		return serialVersionUID;
 	}
 
-	public Integer getIdMedicao() {
+	public Long getIdMedicao() {
 		return idMedicao;
 	}
 
