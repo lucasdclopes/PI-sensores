@@ -7,9 +7,9 @@ public class PaginacaoQueryParams {
 	
 	private Integer MAX_ITENS = 100;
 	
-	@QueryParam("nroLinhas") 
+	@QueryParam("size") 
 	protected Integer nroLinhas;
-	@QueryParam("nroPagina") 
+	@QueryParam("page") 
 	protected Integer nroPagina;
 	
 	
