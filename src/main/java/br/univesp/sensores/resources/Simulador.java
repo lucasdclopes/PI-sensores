@@ -37,9 +37,14 @@ public class Simulador {
 		executar = true;
 		ManagedThreadFactory managedThreadFactory = InitialContext.doLookup("java:comp/DefaultManagedThreadFactory");
 		managedThreadFactory.newThread(() -> { 
+			final Integer MIN_TEMP = 15;
+			final Integer MIN_UMID = 5;
+			
+			final Integer MAX_TEMP = 50;
+			final Integer MAX_UMID = 70;
 			Random rnd = new Random();
-			Double temperatura = rnd.nextDouble(10, 50);
-			Double umidade = rnd.nextDouble(5, 90);
+			Double temperatura = rnd.nextDouble(MIN_TEMP, MAX_TEMP);
+			Double umidade = rnd.nextDouble(MIN_UMID, MAX_UMID);
 			while (Simulador.executar) {
 				try {
 					Thread.sleep(2000);
@@ -51,14 +56,24 @@ public class Simulador {
 						);
 				
 				//gera aleatórios não muito distantes dos valores anteriores
-				temperatura += rnd.nextDouble(-1, 1);
-				umidade += rnd.nextDouble(-0.5, 0.5);
+				Double nextTemp = rnd.nextDouble(-3, 3);
+				if (nextTemp + temperatura < MIN_TEMP || nextTemp + temperatura > MAX_TEMP)
+					nextTemp = nextTemp * -1;
+					
+				Double nextUmid = rnd.nextDouble(-1, 1);
+				if (nextUmid + umidade < MIN_UMID || nextUmid + umidade > MAX_UMID)
+					nextUmid = nextUmid * -1;
+				
+				temperatura += nextTemp;
+				umidade += nextUmid;
+				
 			}
 		}).start();
 		
 		return Response.ok().build();
 		
 	}
+	
 	
 	@POST
 	@Path("/stop")
