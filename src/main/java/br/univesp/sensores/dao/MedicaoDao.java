@@ -12,6 +12,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 
 @Stateless
 public class MedicaoDao {
@@ -23,6 +25,7 @@ public class MedicaoDao {
 	 * @param sensor
 	 * @return id gerado no banco de dados
 	 */
+	@Transactional(value = TxType.REQUIRES_NEW)
 	public Long salvarMedicao(MedicaoSensor sensor) {
 		em.persist(sensor);
 		em.flush();
@@ -36,7 +39,7 @@ public class MedicaoDao {
 				) from MedicaoSensor m
 				WHERE 1 = 1 
 				""";
-		final String orderBy = " order by m.dtMedicao ";
+		final String orderBy = " order by m.dtMedicao desc ";
 		Map<String,Object> params = new HashMap<>();
 		
 		if (dtParams != null) {
