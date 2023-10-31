@@ -15,7 +15,7 @@ import jakarta.ws.rs.ext.Provider;
  */
 public class LocalDateRestHelper {
 	
-	private final static DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+	private final static DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE_TIME; 
 	
 	@Provider
 	public static class LocalDateParamConverterProvider implements ParamConverterProvider {

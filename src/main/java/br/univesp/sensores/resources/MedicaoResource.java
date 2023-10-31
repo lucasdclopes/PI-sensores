@@ -35,7 +35,7 @@ public class MedicaoResource {
 		
 		List<ListaMedicoes> lista = medicaoDao.listar(paginacao,dtParams);
 		if (lista.isEmpty())
-			Response.status(Status.NO_CONTENT).build();
+			return Response.status(Status.NO_CONTENT).build();
 		
 		return Response.ok().entity(lista).build();
 	}
