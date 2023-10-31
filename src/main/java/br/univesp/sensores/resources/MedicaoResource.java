@@ -3,10 +3,12 @@ package br.univesp.sensores.resources;
 import java.util.List;
 
 import br.univesp.sensores.dao.MedicaoDao;
+import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
 import br.univesp.sensores.dto.responses.ListaMedicoes;
 import br.univesp.sensores.entidades.MedicaoSensor;
+import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.BeanParam;
@@ -24,14 +26,14 @@ import jakarta.ws.rs.core.UriInfo;
 @Path("/medicao")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class Medicao {
+public class MedicaoResource {
 	
 	@Inject MedicaoDao medicaoDao;
 	
 	@GET
-	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao) {
+	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		List<ListaMedicoes> lista = medicaoDao.listar(paginacao);
+		List<ListaMedicoes> lista = medicaoDao.listar(paginacao,dtParams);
 		if (lista.isEmpty())
 			Response.status(Status.NO_CONTENT).build();
 		

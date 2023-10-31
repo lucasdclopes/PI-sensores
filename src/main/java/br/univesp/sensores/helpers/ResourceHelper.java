@@ -1,4 +1,4 @@
-package br.univesp.sensores.resources;
+package br.univesp.sensores.helpers;
 
 import java.net.URI;
 
