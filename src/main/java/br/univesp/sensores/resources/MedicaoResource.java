@@ -6,7 +6,7 @@ import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
-import br.univesp.sensores.dto.responses.ListaMedicoes;
+import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
@@ -33,7 +33,7 @@ public class MedicaoResource {
 	@GET
 	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		List<ListaMedicoes> lista = medicaoDao.listar(paginacao,dtParams);
+		List<ListaMedicoesResp> lista = medicaoDao.listar(paginacao,dtParams);
 		if (lista.isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		

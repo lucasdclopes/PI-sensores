@@ -1,5 +1,7 @@
 package br.univesp.sensores.entidades;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -14,7 +16,7 @@ public class LogErrosSistema {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idLogErros;
+	private Long idLogErros;
 	private String msgErro;
 	private LocalDateTime dtLog;
 	private String stacktrace;
@@ -25,14 +27,16 @@ public class LogErrosSistema {
 	@Deprecated
 	public LogErrosSistema() {}
 
-	public LogErrosSistema(String msgErro, LocalDateTime dtLog, String stacktrace) {
+	public LogErrosSistema(LocalDateTime dtLog, Exception erro) {
 		super();
-		this.msgErro = msgErro;
+		this.msgErro = erro.getMessage();
 		this.dtLog = dtLog;
-		this.stacktrace = stacktrace;
+		StringWriter errors = new StringWriter();
+		erro.printStackTrace(new PrintWriter(errors));
+		this.stacktrace = errors.toString();
 	}
 
-	public Integer getIdLogErros() {
+	public Long getIdLogErros() {
 		return idLogErros;
 	}
 
