@@ -2,6 +2,7 @@ package br.univesp.sensores.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,12 +46,13 @@ public class Alerta implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idAlerta;
+	private Long idAlerta;
 	private Boolean isHabilitado;
 	private Integer tipoAlerta;
 	private Integer intervaloEsperaSegundos;
 	private BigDecimal vlMax;
 	private BigDecimal vlMin;
+	private LocalDateTime dtCriado;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true)
 	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
@@ -77,6 +79,7 @@ public class Alerta implements Serializable {
 		this.vlMax = vlMax;
 		this.vlMin = vlMin;
 		this.isHabilitado = true;
+		this.dtCriado = LocalDateTime.now();
 	}
 	
 	public void habilitar() {
@@ -105,14 +108,8 @@ public class Alerta implements Serializable {
 				|| (vlMin != null && vlMedicao.compareTo(vlMin) < 0);
 	}
 	
-
-
-	public Integer getIdAlerta() {
+	public Long getIdAlerta() {
 		return idAlerta;
-	}
-
-	public void setIdAlerta(Integer idAlerta) {
-		this.idAlerta = idAlerta;
 	}
 
 	public Boolean getIsHabilitado() {
@@ -134,9 +131,14 @@ public class Alerta implements Serializable {
 	public BigDecimal getVlMin() {
 		return vlMin;
 	}
+	
+	public LocalDateTime getDtCriado() {
+		return dtCriado;
+	}
 
 	public Set<AlertaEnviado> getAlertasEnviados() {
 		return alertasEnviados;
 	}	
+
 
 }
