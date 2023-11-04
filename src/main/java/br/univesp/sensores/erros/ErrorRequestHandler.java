@@ -1,11 +1,10 @@
-package br.univesp.sensores.server;
+package br.univesp.sensores.erros;
 
 import java.time.LocalDateTime;
 
 import br.univesp.sensores.dao.LogErrosDao;
 import br.univesp.sensores.dto.responses.ResponseSimples;
 import br.univesp.sensores.entidades.LogErrosSistema;
-import br.univesp.sensores.erros.ErroNegocioException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.NotFoundException;

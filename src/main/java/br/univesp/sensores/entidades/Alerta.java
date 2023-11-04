@@ -5,7 +5,11 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jboss.logging.Logger;
+
 import br.univesp.sensores.erros.ErroNegocioException;
+import br.univesp.sensores.helpers.EnumHelper;
+import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +21,26 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "alerta")
 public class Alerta implements Serializable {
+	
+	private static final Logger LOGGER = Logger.getLogger( Alerta.class.getName());
 
+	public enum TipoAlerta implements IEnumDescritivel {
+		TEMPERATURA(1),
+		UMIDADE(2);
+		private Integer codigo;
+		TipoAlerta(Integer codigo){
+			this.codigo = codigo;
+		}
+		@Override
+		public Integer getCodigo() {
+			return this.codigo;		
+		}
+		@Override
+		public String getDescricao() {
+			return "Tipo de alerta";
+		}
+	}
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -40,12 +63,16 @@ public class Alerta implements Serializable {
 	@Deprecated
 	public Alerta() {}
 
-	public Alerta(Integer tipoAlerta, Integer intervaloEsperaSegundos, BigDecimal vlMax, BigDecimal vlMin) {
+	public Alerta(TipoAlerta tipoAlerta, Integer intervaloEsperaSegundos, BigDecimal vlMax, BigDecimal vlMin) {
 		super();
 		if (intervaloEsperaSegundos < INTERVALO_MIN)
 			throw new ErroNegocioException(
 					String.format("O tempo de espera entre alertas não pode ser menor do que %s segundos",INTERVALO_MIN));
-		this.tipoAlerta = tipoAlerta;
+		
+		if (vlMax == null && vlMin == null)
+			throw new ErroNegocioException("Pelo menos o valor mínimo ou valor máximo precisa estar preenchido. Ambos estão vazis");
+		
+		this.tipoAlerta = tipoAlerta.getCodigo();
 		this.intervaloEsperaSegundos = intervaloEsperaSegundos;
 		this.vlMax = vlMax;
 		this.vlMin = vlMin;
@@ -59,6 +86,26 @@ public class Alerta implements Serializable {
 	public void desabilitar() {
 		this.isHabilitado = false;
 	}
+	
+	public void enviarAlerta(MedicaoSensor medicao) {
+		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
+		Boolean enviar = switch (tipoAlerta) {
+		case TEMPERATURA -> checkRange(medicao.getVlTemperatura());
+		case UMIDADE -> checkRange(medicao.getVlUmidade());
+		default -> throw new ErroNegocioException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
+		};
+		
+		if (enviar)
+			LOGGER.fatal("simulando envio do alerta...");
+	
+	}
+	
+	private Boolean checkRange(BigDecimal vlMedicao) {
+		return (vlMax != null && vlMedicao.compareTo(vlMax) > 0)
+				|| (vlMin != null && vlMedicao.compareTo(vlMin) < 0);
+	}
+	
+
 
 	public Integer getIdAlerta() {
 		return idAlerta;
