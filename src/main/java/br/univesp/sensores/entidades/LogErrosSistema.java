@@ -1,6 +1,7 @@
 package br.univesp.sensores.entidades;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 
@@ -12,7 +13,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "log_erros_sistema")
-public class LogErrosSistema {
+public class LogErrosSistema implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
