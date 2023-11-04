@@ -2,12 +2,16 @@ package br.univesp.sensores.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import br.univesp.sensores.erros.ErroNegocioException;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,6 +28,9 @@ public class Alerta implements Serializable {
 	private Integer intervaloEsperaSegundos;
 	private BigDecimal vlMax;
 	private BigDecimal vlMin;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true)
+	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
 	
 	private final static Integer INTERVALO_MIN = 240;
 	
@@ -80,12 +87,9 @@ public class Alerta implements Serializable {
 	public BigDecimal getVlMin() {
 		return vlMin;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+	public Set<AlertaEnviado> getAlertasEnviados() {
+		return alertasEnviados;
+	}	
 
 }

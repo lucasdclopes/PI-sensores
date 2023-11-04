@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,8 +20,11 @@ public class AlertaEnviado implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idEnviado;
-	private Long idAlerta;
 	private LocalDateTime dtMedicao;
+	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "idAlerta", nullable = false)
+	private Alerta alerta;
 	
 	/**
 	 * Construtor exclusivo para o framework Jakarta.
@@ -27,18 +32,18 @@ public class AlertaEnviado implements Serializable {
 	@Deprecated
 	public AlertaEnviado() {}
 
-	public AlertaEnviado(Long idAlerta, LocalDateTime dtMedicao) {
+	public AlertaEnviado(Alerta alerta, LocalDateTime dtMedicao) {
 		super();
-		this.idAlerta = idAlerta;
+		this.alerta = alerta;
 		this.dtMedicao = dtMedicao;
 	}
 
 	public Long getIdEnviado() {
 		return idEnviado;
 	}
-
-	public Long getIdAlerta() {
-		return idAlerta;
+	
+	public Alerta getAlerta() {
+		return alerta;
 	}
 
 	public LocalDateTime getDtMedicao() {
