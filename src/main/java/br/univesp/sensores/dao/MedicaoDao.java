@@ -8,6 +8,7 @@ import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
+import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -32,7 +33,7 @@ public class MedicaoDao {
 		return sensor.getIdMedicao();
 	}
 	
-	public List<ListaMedicoesResp> listar(PaginacaoQueryParams paginacao, DtParams dtParams) {
+	public List<ListaMedicoesResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
 		String jpql = """
 				select new br.univesp.sensores.dto.responses.ListaMedicoes (
 					m.idMedicao,m.vlTemperatura,m.vlUmidade,m.dtMedicao
@@ -42,21 +43,9 @@ public class MedicaoDao {
 		final String orderBy = " order by m.dtMedicao desc ";
 		Map<String,Object> params = new HashMap<>();
 		
-		if (dtParams != null) {
-			
-			if (dtParams.getDtInicial() != null) {
-				jpql += " AND dtMedicao >= :dtInicial ";
-				params.put("dtInicial", dtParams.getDtInicial());
-			}
-			
-			if (dtParams.getDtFinal() != null) {
-				jpql += " AND dtMedicao <= :dtFinal ";
-				params.put("dtFinal", dtParams.getDtFinal());
-			}
-			
-		}
-		
+		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtCriado");
 		jpql += orderBy;
+		
 		TypedQuery<ListaMedicoesResp> query = em.createQuery(jpql, ListaMedicoesResp.class);
 		params.forEach(query::setParameter);
 		
