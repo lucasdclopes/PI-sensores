@@ -103,7 +103,7 @@ public class Alerta implements Serializable {
 	}
 	
 	public void alterarIntervalo(Integer intervalo) {
-		validarIntervalo(intervaloEsperaSegundos);
+		validarIntervalo(intervalo);
 		this.intervaloEsperaSegundos = intervalo;
 		
 	}	
