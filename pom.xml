@@ -48,9 +48,19 @@
 			<artifactId>jakarta.enterprise.cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>		
+		    <groupId>jakarta.enterprise.concurrent</groupId>
+		    <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxb-provider</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>jakarta.mail</groupId>
+		    <artifactId>jakarta.mail-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
