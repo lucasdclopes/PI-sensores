@@ -7,10 +7,6 @@ create table medicao_sensor (
 	constraint UN_dtMedicao unique (dtMedicao desc)
 )
 
-drop table alerta_enviado
-drop table alerta
-go
-
 create table alerta (
 	idAlerta int not null identity(1,1),
 	isHabilitado bit not null,
