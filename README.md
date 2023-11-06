@@ -4,7 +4,7 @@
 
 Este projeto é do PI (Projeto Integrador) do curso de Engenheria de Computação da Univesp. O principal tema é a utilização e integração de sensores IoT
 
-Este repositório contém o backend. O frontend pode ser encontrado no outro repositório: https://github.com/lucasdclopes?tab=repositories
+Este repositório contém o backend. O frontend pode ser encontrado no outro repositório: https://github.com/lucasdclopes/PI-sensores-Frontend
 
 O backend é feito em Java, utiliza o Framework Jakarta EE10 e o servidor WildFly.
 
