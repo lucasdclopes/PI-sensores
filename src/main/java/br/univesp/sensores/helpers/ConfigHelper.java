@@ -12,6 +12,11 @@ public class ConfigHelper {
 	private final static Properties properties = new Properties();
 	private static ConfigHelper singleton = null;
 	
+	public enum Chaves {
+		ALERTA_INTERVALO_MIN,
+		PAGINACAO_MAX_ITENS, 
+		SIMULADOR_INTERVALO;
+	}
 	//singleton
 	public static ConfigHelper getInstance() {
 		ConfigHelper instancia = singleton;
@@ -32,10 +37,18 @@ public class ConfigHelper {
 
 	}
 	
-	public String getConfig(String chave) { 
-		String valor = properties.getProperty(chave);
+	public String getConfig(Chaves chave) { 
+		String valor = properties.getProperty(chave.name());
 		if (valor == null) 
 			throw new RuntimeException("A configuração " + chave  + " não existe no sistema");
 		return valor;
+	}
+	
+	public Integer getConfigInteger(Chaves chave) { 
+		try {
+			return Integer.parseInt(getConfig(chave));
+		} catch (NumberFormatException e) {
+			throw new RuntimeException("O valor da chave " + chave  + " deveria ser numérico");
+		}
 	}
 }

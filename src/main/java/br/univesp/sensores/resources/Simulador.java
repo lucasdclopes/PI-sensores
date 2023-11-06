@@ -8,6 +8,8 @@ import javax.naming.NamingException;
 
 import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.entidades.MedicaoSensor;
+import br.univesp.sensores.helpers.ConfigHelper;
+import br.univesp.sensores.helpers.ConfigHelper.Chaves;
 import jakarta.enterprise.concurrent.ManagedThreadFactory;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -48,7 +50,7 @@ public class Simulador {
 			Double umidade = rnd.nextDouble(MIN_UMID, MAX_UMID);
 			while (Simulador.executar) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(ConfigHelper.getInstance().getConfigInteger(Chaves.SIMULADOR_INTERVALO));
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Erro executando o sleep da thread",e);
 				}

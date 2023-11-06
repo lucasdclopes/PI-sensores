@@ -10,6 +10,8 @@ import java.util.Set;
 import org.jboss.logging.Logger;
 
 import br.univesp.sensores.erros.ErroNegocioException;
+import br.univesp.sensores.helpers.ConfigHelper;
+import br.univesp.sensores.helpers.ConfigHelper.Chaves;
 import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
 import jakarta.mail.internet.AddressException;
@@ -62,7 +64,8 @@ public class Alerta implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
 	
-	private final static Integer INTERVALO_MIN = 240;
+	private final static Integer INTERVALO_MIN = ConfigHelper.getInstance()
+			.getConfigInteger(Chaves.ALERTA_INTERVALO_MIN);
 	
 	/**
 	 * Construtor exclusivo para o framework Jakarta.

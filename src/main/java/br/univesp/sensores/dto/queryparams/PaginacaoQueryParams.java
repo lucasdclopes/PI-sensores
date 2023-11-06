@@ -1,11 +1,14 @@
 package br.univesp.sensores.dto.queryparams;
 
+import br.univesp.sensores.helpers.ConfigHelper;
+import br.univesp.sensores.helpers.ConfigHelper.Chaves;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.QueryParam;
 
 public class PaginacaoQueryParams {
 	
-	private Integer MAX_ITENS = 100;
+	private Integer MAX_ITENS = ConfigHelper.getInstance()
+			.getConfigInteger(Chaves.PAGINACAO_MAX_ITENS);
 	
 	@QueryParam("size") 
 	protected Integer nroLinhas;

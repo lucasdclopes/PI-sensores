@@ -12,7 +12,6 @@ import br.univesp.sensores.dto.responses.ListaAlertasResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.erros.ErroNegocioException;
-import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
@@ -64,7 +63,6 @@ public class AlertaResource {
 	@POST
 	public Response salvarNovoAlerta(final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
 		
-		System.out.println(ConfigHelper.getInstance().getConfig("teste"));
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(novoAlerta.tipoAlerta(),TipoAlerta.class);
 		
 		Alerta alerta = new Alerta(
