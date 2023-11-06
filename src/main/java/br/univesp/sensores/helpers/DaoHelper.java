@@ -16,6 +16,7 @@ public class DaoHelper {
 	public static String addWhereRangeData(
 			Map<String,Object> params, final DtParams dtParams, final String nomeCampo) {
 		
+		dtParams.validar();
 		String paramsWhere = "";
 		if (dtParams != null) {
 						
