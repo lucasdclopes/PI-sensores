@@ -10,6 +10,7 @@ import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.NotSupportedException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -50,8 +51,16 @@ public class ErrorRequestHandler implements ExceptionMapper<Exception> {
 			return Response.status(422).entity(new ResponseSimples(e.getMessage())).build();
 		} 
 		
+		Integer status = 500;
+		final String MSG_GENERICA = "Ocorreu um erro inesperado. Contate o administrador para consultar os logs";
+		String msgErroUsuario = MSG_GENERICA;
+		if (e instanceof NotSupportedException err) {
+			status = 415;
+			msgErroUsuario = err.getMessage();
+		}
+		
 		//Por ser um erro não tratado, esconde a mensagem de erro, que ficará disponível somente para quem tiver acesso aos logs
-		return Response.status(500).entity(new ResponseSimples("Ocorreu um erro inesperado. Contate o administrador para consultar os logs")).build();
+		return Response.status(status).entity(msgErroUsuario).build();
 	}
 	
 	public Exception checkCause(Exception e) {		

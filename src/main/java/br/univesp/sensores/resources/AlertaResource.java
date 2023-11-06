@@ -1,5 +1,6 @@
 package br.univesp.sensores.resources;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import br.univesp.sensores.dao.AlertaDao;
@@ -16,7 +17,6 @@ import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -24,6 +24,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -53,7 +54,7 @@ public class AlertaResource {
 	public Response getAlertasEnviados(@PathParam("idAlerta") final Long idAlerta, 
 			@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		List<ListaAlertasResp> lista = alertaDao.listar(paginacao,dtParams);
+		List<LocalDateTime> lista = alertaDao.listarEnviados(idAlerta,paginacao);
 		if (lista.isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		
