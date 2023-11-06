@@ -85,11 +85,12 @@ public class AlertaDao {
 	public void deletarEnviados(final Long idAlerta,final DtParams dtParams) {
 		String jpql = """
 				delete from AlertaEnviado ae 
-				where ae.alerta.idAlerta = :idAlerta;
+				where ae.alerta.idAlerta = :idAlerta
 				""";
 		
 		Map<String,Object> params = new HashMap<>();
 		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtEnvio");
+		params.put("idAlerta", idAlerta);
 		
 		Query query = em.createQuery(jpql);
 		params.forEach(query::setParameter);
@@ -105,7 +106,7 @@ public class AlertaDao {
 		
 		String jpql = """
 				delete from Alerta a 
-				where a.idAlerta = :idAlerta;
+				where a.idAlerta = :idAlerta
 				""";
 		
 		em.createQuery(jpql)
