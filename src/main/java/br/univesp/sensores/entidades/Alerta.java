@@ -3,12 +3,15 @@ package br.univesp.sensores.entidades;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jboss.logging.Logger;
 
+import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -60,6 +63,7 @@ public class Alerta implements Serializable {
 	private BigDecimal vlMin;
 	private LocalDateTime dtCriado;
 	private String destinatarios;
+	private LocalDateTime dtUltimoEnvio; 
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
@@ -108,16 +112,27 @@ public class Alerta implements Serializable {
 		
 	}	
 	
-	public void enviarAlerta(MedicaoSensor medicao) {
+	public void enviarAlerta(List<ListaMedicoesResp> medicao) {
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
-		Boolean enviar = switch (tipoAlerta) {
-		case TEMPERATURA -> checkRange(medicao.getVlTemperatura());
-		case UMIDADE -> checkRange(medicao.getVlUmidade());
-		default -> throw new ErroNegocioException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
-		};
 		
+		//verifica se já se passaram X segundos desde o último envio
+		if (this.dtUltimoEnvio != null && 
+				this.dtUltimoEnvio.until(LocalDateTime.now(), ChronoUnit.SECONDS) < this.intervaloEsperaSegundos)
+			return;
+		
+		Boolean enviar = medicao.stream().filter(m -> {
+			return switch (tipoAlerta) {
+			case TEMPERATURA -> checkRange(m.vlTemperatura());
+			case UMIDADE -> checkRange(m.vlUmidade());
+			default -> throw new ErroNegocioException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
+			};
+		}).findAny().isPresent();
+		
+	
 		if (enviar) {
-			this.alertasEnviados.add(new AlertaEnviado(this, LocalDateTime.now()));
+			LocalDateTime agora = LocalDateTime.now();
+			this.alertasEnviados.add(new AlertaEnviado(this,agora));
+			this.dtUltimoEnvio = agora;
 			LOGGER.fatal("simulando envio do alerta para " + this.destinatarios);
 		}
 	

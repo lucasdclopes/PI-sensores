@@ -7,7 +7,7 @@
 		<jta-data-source>java:/PI5</jta-data-source>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
-			<property name="hibernate.show_sql" value="false"/>
+			<property name="hibernate.show_sql" value="true"/>
 			<property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.hbm2ddl.auto" value="none"/>
 		</properties>

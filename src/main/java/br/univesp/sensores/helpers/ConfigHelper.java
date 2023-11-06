@@ -14,7 +14,12 @@ public class ConfigHelper {
 	
 	public enum Chaves {
 		ALERTA_INTERVALO_MIN,
+		
 		PAGINACAO_MAX_ITENS, 
+		
+		SCHEDULER_ALERTA_INTERVALO,
+		SCHEDULER_ALERTA_LIGADO,
+		
 		SIMULADOR_INTERVALO;
 	}
 	//singleton
@@ -50,5 +55,15 @@ public class ConfigHelper {
 		} catch (NumberFormatException e) {
 			throw new RuntimeException("O valor da chave " + chave  + " deveria ser numérico");
 		}
+	}
+	
+	public Boolean getConfigBoolean(Chaves chave) { 
+		String valor = getConfig(chave);
+		if (valor.equalsIgnoreCase("true"))
+			return true;
+		else if (valor.equalsIgnoreCase("false"))
+			return false;
+		else 
+			throw new RuntimeException("O valor da chave " + chave  + " deveria ser true ou false");	
 	}
 }

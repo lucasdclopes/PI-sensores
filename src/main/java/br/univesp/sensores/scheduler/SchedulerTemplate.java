@@ -73,7 +73,7 @@ public abstract class SchedulerTemplate {
 	public MonitorStatusResp inicializarIntervaloFixo() {
 		
 		LocalDateTime inicioExecucao = LocalDateTime.now();
-		//LOGGER.log(Level.INFO, "Iniciando monitor");
+		LOGGER.log(Level.INFO, "Iniciando monitor");
 		if (status == CodigosStatusMonitor.PARADO) {
 			status = CodigosStatusMonitor.INICIANDO;
 			try {

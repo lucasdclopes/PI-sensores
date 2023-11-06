@@ -12,6 +12,12 @@ public class DtParams {
 	
 	public DtParams() {}
 	
+	public DtParams(LocalDateTime dtInicial, LocalDateTime dtFinal) {
+		this.dtInicial = dtInicial;
+		this.dtFinal = dtFinal;
+	}
+
+
 	public LocalDateTime getDtInicial() {
 		return dtInicial;
 	}

@@ -31,8 +31,8 @@ public class Simulador {
 	public static Boolean executar = false;
 	
 	@POST
-	@Path("/start")
-	public Response start() throws NamingException {
+	@Path("/iniciar")
+	public Response iniciar() throws NamingException {
 		
 		if (executar)
 			return Response.status(Status.CONFLICT).entity("Simulador já estava iniciado").build();
@@ -50,7 +50,7 @@ public class Simulador {
 			Double umidade = rnd.nextDouble(MIN_UMID, MAX_UMID);
 			while (Simulador.executar) {
 				try {
-					Thread.sleep(ConfigHelper.getInstance().getConfigInteger(Chaves.SIMULADOR_INTERVALO));
+					Thread.sleep(ConfigHelper.getInstance().getConfigInteger(Chaves.SIMULADOR_INTERVALO)*1000);
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Erro executando o sleep da thread",e);
 				}
@@ -79,8 +79,8 @@ public class Simulador {
 	
 	
 	@POST
-	@Path("/stop")
-	public Response stop() {
+	@Path("/parar")
+	public Response parar() {
 		executar = false;
 		return Response.ok().build();
 	}

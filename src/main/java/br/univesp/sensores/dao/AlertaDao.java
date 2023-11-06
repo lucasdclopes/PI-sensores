@@ -67,6 +67,17 @@ public class AlertaDao {
 				
 	}
 	
+	public List<Alerta> buscarAlertasValidos(){
+		String jpql = """
+				select a from Alerta a
+				left join fetch a.alertasEnviados 
+				WHERE a.isHabilitado = true
+				order by a.dtCriado desc
+				""";
+		
+		return em.createQuery(jpql, Alerta.class).getResultList();
+	}
+	
 	public List<LocalDateTime> listarEnviados(final Long idAlerta, final PaginacaoQueryParams paginacao){
 		
 		String jpql = """

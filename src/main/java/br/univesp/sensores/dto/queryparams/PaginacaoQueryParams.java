@@ -15,7 +15,12 @@ public class PaginacaoQueryParams {
 	@QueryParam("page") 
 	protected Integer nroPagina;
 	
+	public PaginacaoQueryParams() {}
 	
+	public PaginacaoQueryParams(Integer nroLinhas, Integer nroPagina) {
+		this.nroLinhas = nroLinhas;
+		this.nroPagina = nroPagina;
+	}
 	public Integer getNroLinhas(){
 		if (nroLinhas == null || nroLinhas < 1)
 			nroLinhas = 20;
