@@ -11,6 +11,7 @@ import br.univesp.sensores.entidades.MedicaoSensor;
 import jakarta.enterprise.concurrent.ManagedThreadFactory;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -80,6 +81,12 @@ public class Simulador {
 	public Response stop() {
 		executar = false;
 		return Response.ok().build();
+	}
+	
+	
+	@GET
+	public Response status() {
+		return Response.ok().entity(executar).build();
 	}
 
 }

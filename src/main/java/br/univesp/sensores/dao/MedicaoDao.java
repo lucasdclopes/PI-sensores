@@ -35,7 +35,7 @@ public class MedicaoDao {
 	
 	public List<ListaMedicoesResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
 		String jpql = """
-				select new br.univesp.sensores.dto.responses.ListaMedicoes (
+				select new br.univesp.sensores.dto.responses.ListaMedicoesResp (
 					m.idMedicao,m.vlTemperatura,m.vlUmidade,m.dtMedicao
 				) from MedicaoSensor m
 				WHERE 1 = 1 
@@ -43,7 +43,7 @@ public class MedicaoDao {
 		final String orderBy = " order by m.dtMedicao desc ";
 		Map<String,Object> params = new HashMap<>();
 		
-		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtCriado");
+		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtMedicao");
 		jpql += orderBy;
 		
 		TypedQuery<ListaMedicoesResp> query = em.createQuery(jpql, ListaMedicoesResp.class);

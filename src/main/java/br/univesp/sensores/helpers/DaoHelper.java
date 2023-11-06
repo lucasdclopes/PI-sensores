@@ -18,15 +18,15 @@ public class DaoHelper {
 		
 		String paramsWhere = "";
 		if (dtParams != null) {
-			
+						
 			if (dtParams.getDtInicial() != null) {
 				paramsWhere += " AND " + nomeCampo + " >= :dtInicial ";
-				params.put("nomeCampo", dtParams.getDtInicial());
+				params.put("dtInicial", dtParams.getDtInicial());
 			}
 			
 			if (dtParams.getDtFinal() != null) {
 				paramsWhere += " AND " + nomeCampo + " <= :dtFinal ";
-				params.put(nomeCampo, dtParams.getDtFinal());
+				params.put("dtFinal", dtParams.getDtFinal());
 			}
 			
 		}
