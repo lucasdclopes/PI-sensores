@@ -14,6 +14,7 @@ import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
+import br.univesp.sensores.helpers.EmailHelper;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -33,6 +34,7 @@ public class SchedulerAlerta extends SchedulerTemplate {
 	
 	@Inject private AlertaDao alertaDao;
 	@Inject private MedicaoDao medicaoDao;
+	@Inject private EmailHelper email;
 	
 	@Override
 	protected void executarTarefaAgendada() {
@@ -58,7 +60,7 @@ public class SchedulerAlerta extends SchedulerTemplate {
 			LOGGER.info("executando verificação de alertas");
 			medicaoMaisRecente = medicoes.get(0).dtMedicao();
 			for (Alerta alerta : alertas) {
-				alerta.enviarAlerta(medicoes);
+				alerta.enviarAlerta(medicoes,email);
 				alertaDao.atualizar(alerta);
 			}
 	

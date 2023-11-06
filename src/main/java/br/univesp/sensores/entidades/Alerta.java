@@ -15,6 +15,7 @@ import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
+import br.univesp.sensores.helpers.EmailHelper;
 import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
 import jakarta.mail.internet.AddressException;
@@ -112,7 +113,7 @@ public class Alerta implements Serializable {
 		
 	}	
 	
-	public void enviarAlerta(List<ListaMedicoesResp> medicao) {
+	public void enviarAlerta(List<ListaMedicoesResp> medicao, EmailHelper email) {
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
 		
 		//verifica se já se passaram X segundos desde o último envio
@@ -133,7 +134,8 @@ public class Alerta implements Serializable {
 			LocalDateTime agora = LocalDateTime.now();
 			this.alertasEnviados.add(new AlertaEnviado(this,agora));
 			this.dtUltimoEnvio = agora;
-			LOGGER.fatal("simulando envio do alerta para " + this.destinatarios);
+			LOGGER.fatal("enviando o alerta para " + this.destinatarios);
+			email.enviarEmail(this.validarEmails(destinatarios));
 		}
 	
 	}
@@ -150,7 +152,7 @@ public class Alerta implements Serializable {
 				|| (vlMin != null && vlMedicao.compareTo(vlMin) < 0);
 	}
 	
-	private void validarEmails(String destinatarios) {
+	private Set<String> validarEmails(String destinatarios) {
 		Set<String> emails = new HashSet<String>(Arrays.asList(destinatarios.split(";"))); //jogar em um SET elimina os duplicados
 		emails.forEach(mail -> {
 			try {
@@ -159,6 +161,7 @@ public class Alerta implements Serializable {
 				throw new ErroNegocioException("O endereço de email ("+ mail +") informado é inválido");
 			}
 		});
+		return emails;
 	}
 	
 	public Long getIdAlerta() {
