@@ -20,7 +20,7 @@ public class AlertaEnviado implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idEnviado;
-	private LocalDateTime dtMedicao;
+	private LocalDateTime dtEnvio;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "idAlerta", nullable = false)
@@ -32,9 +32,9 @@ public class AlertaEnviado implements Serializable {
 	@Deprecated
 	public AlertaEnviado() {}
 
-	public AlertaEnviado(Alerta alerta, LocalDateTime dtMedicao) {
+	public AlertaEnviado(Alerta alerta, LocalDateTime dtEnvio) {
 		this.alerta = alerta;
-		this.dtMedicao = dtMedicao;
+		this.dtEnvio = dtEnvio;
 	}
 
 	public Long getIdEnviado() {
@@ -45,10 +45,10 @@ public class AlertaEnviado implements Serializable {
 		return alerta;
 	}
 
-	public LocalDateTime getDtMedicao() {
-		return dtMedicao;
+	public LocalDateTime getDtEnvio() {
+		return dtEnvio;
 	}
-	
+		
 	
 
 }

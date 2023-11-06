@@ -54,10 +54,10 @@ public class AlertaDao {
 				) from Alerta a
 				WHERE 1 = 1 
 				""";
-		final String orderBy = " order by m.dtMedicao desc ";
+		final String orderBy = " order by a.dtCriado desc ";
 		Map<String,Object> params = new HashMap<>();
 		
-		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtCriado");
+		jpql += DaoHelper.addWhereRangeData(params, dtParams, "a.dtCriado");
 		jpql += orderBy;
 		
 		TypedQuery<ListaAlertasResp> query = em.createQuery(jpql, ListaAlertasResp.class);
@@ -70,9 +70,9 @@ public class AlertaDao {
 	public List<LocalDateTime> listarEnviados(final Long idAlerta, final PaginacaoQueryParams paginacao){
 		
 		String jpql = """
-				select e.dtMedicao from AlertaEnviado e 
+				select e.dtEnvio from AlertaEnviado e 
 				where e.alerta.idAlerta = :idAlerta
-				order by e.dtMedicao desc
+				order by e.dtEnvio desc
 				""";
 		
 		return  paginacao.configurarPaginacao(
@@ -89,7 +89,7 @@ public class AlertaDao {
 				""";
 		
 		Map<String,Object> params = new HashMap<>();
-		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtCriado");
+		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtEnvio");
 		
 		Query query = em.createQuery(jpql);
 		params.forEach(query::setParameter);
