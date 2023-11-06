@@ -41,7 +41,7 @@ public class MedicaoResource {
 	}
 	
 	@POST
-	public Response salvarMedicao(NovaMedicao novaMedicao, @Context UriInfo uriInfo) {
+	public Response salvarMedicao(final NovaMedicao novaMedicao, @Context UriInfo uriInfo) {
 		
 		MedicaoSensor med = new MedicaoSensor(novaMedicao.vlTemperatura(), novaMedicao.vlUmidade());
 		Long id = medicaoDao.salvarMedicao(med);

@@ -6,7 +6,8 @@ public record NovoAlerta(
 		Integer tipoAlerta,
 		Integer intervaloEsperaSegundos,
 		BigDecimal vlMax,
-		BigDecimal vlMin
+		BigDecimal vlMin,
+		String destinatarios
 		) {
 
 }

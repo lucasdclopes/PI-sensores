@@ -3,6 +3,7 @@ package br.univesp.sensores.entidades;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +12,8 @@ import org.jboss.logging.Logger;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -53,6 +56,7 @@ public class Alerta implements Serializable {
 	private BigDecimal vlMax;
 	private BigDecimal vlMin;
 	private LocalDateTime dtCriado;
+	private String destinatarios;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true)
 	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
@@ -65,7 +69,7 @@ public class Alerta implements Serializable {
 	@Deprecated
 	public Alerta() {}
 
-	public Alerta(TipoAlerta tipoAlerta, Integer intervaloEsperaSegundos, BigDecimal vlMax, BigDecimal vlMin) {
+	public Alerta(TipoAlerta tipoAlerta, Integer intervaloEsperaSegundos, BigDecimal vlMax, BigDecimal vlMin, String destinatarios) {
 		super();
 		if (intervaloEsperaSegundos < INTERVALO_MIN)
 			throw new ErroNegocioException(
@@ -74,12 +78,15 @@ public class Alerta implements Serializable {
 		if (vlMax == null && vlMin == null)
 			throw new ErroNegocioException("Pelo menos o valor mínimo ou valor máximo precisa estar preenchido. Ambos estão vazis");
 		
+		validarEmails(destinatarios);
+		
 		this.tipoAlerta = tipoAlerta.getCodigo();
 		this.intervaloEsperaSegundos = intervaloEsperaSegundos;
 		this.vlMax = vlMax;
 		this.vlMin = vlMin;
 		this.isHabilitado = true;
 		this.dtCriado = LocalDateTime.now();
+		this.destinatarios = destinatarios;
 	}
 	
 	public void habilitar() {
@@ -90,6 +97,11 @@ public class Alerta implements Serializable {
 		this.isHabilitado = false;
 	}
 	
+	public void alterarDestinatarios(String destinatarios) {
+		validarEmails(destinatarios);
+		this.destinatarios = destinatarios;
+	}
+	
 	public void enviarAlerta(MedicaoSensor medicao) {
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
 		Boolean enviar = switch (tipoAlerta) {
@@ -98,14 +110,27 @@ public class Alerta implements Serializable {
 		default -> throw new ErroNegocioException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
 		};
 		
-		if (enviar)
-			LOGGER.fatal("simulando envio do alerta...");
+		if (enviar) {
+			this.alertasEnviados.add(new AlertaEnviado(this, LocalDateTime.now()));
+			LOGGER.fatal("simulando envio do alerta para " + this.destinatarios);
+		}
 	
 	}
 	
 	private Boolean checkRange(BigDecimal vlMedicao) {
 		return (vlMax != null && vlMedicao.compareTo(vlMax) > 0)
 				|| (vlMin != null && vlMedicao.compareTo(vlMin) < 0);
+	}
+	
+	private void validarEmails(String destinatarios) {
+		Set<String> emails = new HashSet<String>(Arrays.asList(destinatarios.split(";"))); //jogar em um SET elimina os duplicados
+		emails.forEach(mail -> {
+			try {
+				new InternetAddress(mail).validate();
+			} catch (AddressException e) {
+				throw new ErroNegocioException("O endereço de email ("+ mail +") informado é inválido");
+			}
+		});
 	}
 	
 	public Long getIdAlerta() {
@@ -134,6 +159,10 @@ public class Alerta implements Serializable {
 	
 	public LocalDateTime getDtCriado() {
 		return dtCriado;
+	}
+	
+	public String getDestinatarios() {
+		return destinatarios;
 	}
 
 	public Set<AlertaEnviado> getAlertasEnviados() {

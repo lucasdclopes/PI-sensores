@@ -13,6 +13,7 @@ import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -42,12 +43,25 @@ public class AlertaResource {
 		return Response.ok().entity(lista).build();
 	}
 	
+	@GET
+	@Path("/{idAlerta}")
+	public Response getAlertasEnviados(@PathParam("idAlerta") final Long idAlerta, 
+			@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
+		
+		List<ListaAlertasResp> lista = alertaDao.listar(paginacao,dtParams);
+		if (lista.isEmpty())
+			return Response.status(Status.NO_CONTENT).build();
+		
+		return Response.ok().entity(lista).build();
+	}
+	
 	@POST
-	public Response salvarNovoAlerta(NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
+	public Response salvarNovoAlerta(final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
 		
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(novoAlerta.tipoAlerta(),TipoAlerta.class);
+		
 		Alerta alerta = new Alerta(
-				tipoAlerta, novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin()
+				tipoAlerta, novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin(),novoAlerta.destinatarios()
 				);
 		
 		Long id = alertaDao.salvar(alerta);

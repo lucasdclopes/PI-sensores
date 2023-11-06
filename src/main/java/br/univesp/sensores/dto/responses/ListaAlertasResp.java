@@ -10,7 +10,8 @@ public record ListaAlertasResp(
 		Integer intervaloEsperaSegundos,
 		BigDecimal vlMax,
 		BigDecimal vlMin,
-		LocalDateTime dtCriado
+		LocalDateTime dtCriado,
+		String destinatarios
 		) {
 
 }
