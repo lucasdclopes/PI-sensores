@@ -6,13 +6,15 @@ Este projeto é do PI (Projeto Integrador ) do curso de Engenheria de Computaç�
 
 Este repositório contém o backend. O frontend pode ser encontrado no outro repositório: [https://github.com/lucasdclopes/PI-Analise-Dados-Frontend](https://github.com/lucasdclopes/PI-sensores-Frontend)
 
-O backend é feito em Java 17, utiliza o Framework Jakarta EE10 e o servidor Wildfly 30.0.0
+O backend é feito em Java, utiliza o Framework Jakarta EE10 e o servidor WildFly.
 
 ## Requisitos
 
 Para executar este projeto você precisa do OpenJDK 17. O sistema foi testado com a build da Azul x86 64 bits: https://www.azul.com/downloads/?version=java-17-lts&architecture=x86-64-bit&package=jdk#zulu
 
 O banco de dados utilizado é o Microsoft SQL Server 2022 (16.0.1050.5).
+
+O servidor de aplicação e Web é o WildFly 30.0.0.Final (https://www.wildfly.org/downloads/)
 
 A IDE utilizada é o Eclipse, mas pode-se trabalhar com a IDE de sua preferência
 
@@ -26,11 +28,11 @@ Note que o banco de dados não é criado automáticamente. É necessário utiliz
 
 ## Acesso ao banco de dados
 
-Os dados de acesso ao banco de dados estão no arquivo `/src/main/resources/application.properties`
+Os dados de acesso ao banco de dados ficam configurados nos DataSources do WildFly, dentro do arquivo `standalone.xml` deste servidor.
 
 ## Executando
 
-É necessário realizar o deploy em um servidor Wildfly 30. Recomendo consultar a documentação deste servidor. https://docs.wildfly.org/30/
+É necessário realizar o deploy em um servidor WildFly 30. Recomendo consultar a documentação deste servidor. https://docs.wildfly.org/30/
 
 
 ## Créditos
