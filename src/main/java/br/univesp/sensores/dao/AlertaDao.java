@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
@@ -33,6 +34,16 @@ public class AlertaDao {
 		em.persist(alerta);
 		em.flush();
 		return alerta.getIdAlerta();
+	}
+	
+	public Alerta atualizar(Alerta alerta) {
+		return em.merge(alerta);
+	}
+	
+	public Optional<Alerta> buscarPorId(final Long idAlerta) {
+		return Optional.ofNullable(
+				em.find(Alerta.class, idAlerta)
+				);
 	}
 	
 	public List<ListaAlertasResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {

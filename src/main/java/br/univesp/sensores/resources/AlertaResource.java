@@ -5,10 +5,12 @@ import java.util.List;
 import br.univesp.sensores.dao.AlertaDao;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
+import br.univesp.sensores.dto.requests.AtualizarAlerta;
 import br.univesp.sensores.dto.requests.NovoAlerta;
 import br.univesp.sensores.dto.responses.ListaAlertasResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.entidades.Alerta.TipoAlerta;
+import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
@@ -16,8 +18,10 @@ import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -68,5 +72,42 @@ public class AlertaResource {
 		return Response
 				.created(ResourceHelper.montarLocation(uriInfo,id))
 				.build();	
+	}
+	
+	/*
+	 * Só permito alterar os destinatários, o intervalo limite e liga/desliga. Para não bagunçar o histórico.
+	 * Se precisar mudar os parâmetros, crie outro alerta
+	 */
+	@PUT
+	@Path("/{idAlerta}")
+	public Response atualizarAlerta(@PathParam("idAlerta") final Long idAlerta, final AtualizarAlerta atualizar) {
+
+		Alerta alerta = alertaDao.buscarPorId(idAlerta)
+				.orElseThrow(() ->  new ErroNegocioException("O alerta especificado não foi encontrado"));
+		
+		if (atualizar.isHabilitado() != null) {
+			if (atualizar.isHabilitado())
+				alerta.habilitar();
+			else
+				alerta.desabilitar();
+		}
+		
+		if (atualizar.intervaloEsperaSegundos() != null) 
+			alerta.alterarIntervalo(atualizar.intervaloEsperaSegundos());
+		
+		if (atualizar.destinatarios() != null)
+			alerta.alterarDestinatarios(atualizar.destinatarios());
+		
+		alertaDao.atualizar(alerta);
+		
+		return Response.status(Status.NO_CONTENT).build();
+		
+	}
+	
+	@DELETE
+	@Path("/{idAlerta}")
+	public Response removerAlerta(@PathParam("idAlerta") final Long idAlerta) {
+		alertaDao.deletarPorId(idAlerta);
+		return Response.status(Status.NO_CONTENT).build();
 	}
 }

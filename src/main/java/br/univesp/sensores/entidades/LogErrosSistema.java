@@ -31,7 +31,6 @@ public class LogErrosSistema implements Serializable {
 	public LogErrosSistema() {}
 
 	public LogErrosSistema(LocalDateTime dtLog, Exception erro) {
-		super();
 		this.msgErro = erro.getMessage();
 		this.dtLog = dtLog;
 		StringWriter errors = new StringWriter();

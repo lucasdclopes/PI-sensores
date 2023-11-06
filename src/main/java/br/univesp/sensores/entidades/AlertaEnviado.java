@@ -33,7 +33,6 @@ public class AlertaEnviado implements Serializable {
 	public AlertaEnviado() {}
 
 	public AlertaEnviado(Alerta alerta, LocalDateTime dtMedicao) {
-		super();
 		this.alerta = alerta;
 		this.dtMedicao = dtMedicao;
 	}

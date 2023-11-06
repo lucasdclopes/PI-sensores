@@ -14,6 +14,7 @@ import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -58,7 +59,7 @@ public class Alerta implements Serializable {
 	private LocalDateTime dtCriado;
 	private String destinatarios;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
 	
 	private final static Integer INTERVALO_MIN = 240;
@@ -70,14 +71,10 @@ public class Alerta implements Serializable {
 	public Alerta() {}
 
 	public Alerta(TipoAlerta tipoAlerta, Integer intervaloEsperaSegundos, BigDecimal vlMax, BigDecimal vlMin, String destinatarios) {
-		super();
-		if (intervaloEsperaSegundos < INTERVALO_MIN)
-			throw new ErroNegocioException(
-					String.format("O tempo de espera entre alertas não pode ser menor do que %s segundos",INTERVALO_MIN));
-		
 		if (vlMax == null && vlMin == null)
 			throw new ErroNegocioException("Pelo menos o valor mínimo ou valor máximo precisa estar preenchido. Ambos estão vazis");
 		
+		validarIntervalo(intervaloEsperaSegundos);
 		validarEmails(destinatarios);
 		
 		this.tipoAlerta = tipoAlerta.getCodigo();
@@ -102,6 +99,12 @@ public class Alerta implements Serializable {
 		this.destinatarios = destinatarios;
 	}
 	
+	public void alterarIntervalo(Integer intervalo) {
+		validarIntervalo(intervaloEsperaSegundos);
+		this.intervaloEsperaSegundos = intervalo;
+		
+	}	
+	
 	public void enviarAlerta(MedicaoSensor medicao) {
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
 		Boolean enviar = switch (tipoAlerta) {
@@ -115,6 +118,13 @@ public class Alerta implements Serializable {
 			LOGGER.fatal("simulando envio do alerta para " + this.destinatarios);
 		}
 	
+	}
+	
+	private void validarIntervalo(Integer intervalo) {
+		if (intervaloEsperaSegundos < INTERVALO_MIN)
+			throw new ErroNegocioException(
+					String.format("O tempo de espera entre alertas não pode ser menor do que %s segundos",INTERVALO_MIN));
+		
 	}
 	
 	private Boolean checkRange(BigDecimal vlMedicao) {
@@ -167,7 +177,6 @@ public class Alerta implements Serializable {
 
 	public Set<AlertaEnviado> getAlertasEnviados() {
 		return alertasEnviados;
-	}	
-
+	}
 
 }

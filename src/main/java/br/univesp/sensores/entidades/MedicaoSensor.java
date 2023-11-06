@@ -31,7 +31,6 @@ public class MedicaoSensor implements Serializable {
 	
 
 	public MedicaoSensor(BigDecimal vlTemperatura, BigDecimal vlUmidade) {
-		super();
 		this.vlTemperatura = vlTemperatura;
 		this.vlUmidade = vlUmidade;
 		this.dtMedicao = LocalDateTime.now();
