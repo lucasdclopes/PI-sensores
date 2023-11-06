@@ -124,7 +124,7 @@ public class Alerta implements Serializable {
 	}
 	
 	private void validarIntervalo(Integer intervalo) {
-		if (intervaloEsperaSegundos < INTERVALO_MIN)
+		if (intervalo < INTERVALO_MIN)
 			throw new ErroNegocioException(
 					String.format("O tempo de espera entre alertas não pode ser menor do que %s segundos",INTERVALO_MIN));
 		
