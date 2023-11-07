@@ -14,6 +14,7 @@ public class ConfigHelper {
 	
 	public enum Chaves {
 		ALERTA_INTERVALO_MIN,
+		CORS_URLS_PERMITIDAS,
 		
 		EMAIL_NOME_REMETENTE,
 		EMAIL_ENDERECO_REMETENTE,
@@ -23,10 +24,8 @@ public class ConfigHelper {
 		EMAIL_SMTP_SENHA,
 		
 		PAGINACAO_MAX_ITENS, 
-		
 		SCHEDULER_ALERTA_INTERVALO,
 		SCHEDULER_ALERTA_LIGADO,
-		
 		SIMULADOR_INTERVALO;
 	}
 	//singleton
