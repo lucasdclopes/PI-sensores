@@ -8,6 +8,8 @@ import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
 import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
+import br.univesp.sensores.helpers.ConfigHelper;
+import br.univesp.sensores.helpers.ConfigHelper.Chaves;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -17,9 +19,11 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -41,13 +45,16 @@ public class MedicaoResource {
 	}
 	
 	@POST
-	public Response salvarMedicao(final NovaMedicao novaMedicao, @Context UriInfo uriInfo) {
+	public Response salvarMedicao(final NovaMedicao novaMedicao, @Context UriInfo uriInfo, @QueryParam("showIntervalo") final boolean showIntervalo) {
 		
 		MedicaoSensor med = new MedicaoSensor(novaMedicao.vlTemperatura(), novaMedicao.vlUmidade());
 		Long id = medicaoDao.salvarMedicao(med);
-		return Response
-				.created(ResourceHelper.montarLocation(uriInfo,id))
-				.build();
+		
+		ResponseBuilder builder = Response.created(ResourceHelper.montarLocation(uriInfo,id));
+		if (showIntervalo) 
+			builder = builder.entity(ConfigHelper.getInstance().getConfigInteger(Chaves.MONITORAMENTO_INTERVALO));
+			
+		return builder.build();
 		
 	}
 
