@@ -10,7 +10,7 @@ import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
-import br.univesp.sensores.helpers.EmailHelper;
+import br.univesp.sensores.services.EmailService;
 import jakarta.enterprise.concurrent.ManagedThreadFactory;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -92,7 +92,7 @@ public class Simulador {
 		return Response.ok().entity(executar).build();
 	}
 	
-	@Inject private EmailHelper mail;
+	@Inject private EmailService mail;
 	@POST
 	@Path("/testar-email")
 	public Response enviarEmail() {

@@ -10,9 +10,7 @@ import br.univesp.sensores.dto.requests.AtualizarAlerta;
 import br.univesp.sensores.dto.requests.NovoAlerta;
 import br.univesp.sensores.dto.responses.ListaAlertasResp;
 import br.univesp.sensores.entidades.Alerta;
-import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.erros.ErroNegocioException;
-import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -63,10 +61,8 @@ public class AlertaResource {
 	@POST
 	public Response salvarNovoAlerta(final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
 		
-		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(novoAlerta.tipoAlerta(),TipoAlerta.class);
-		
 		Alerta alerta = new Alerta(
-				tipoAlerta, novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin(),novoAlerta.destinatarios()
+				Alerta.toAlerta(novoAlerta.tipoAlerta()), novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin(),novoAlerta.destinatarios()
 				);
 		
 		Long id = alertaDao.salvar(alerta);

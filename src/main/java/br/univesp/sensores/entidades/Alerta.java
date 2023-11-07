@@ -3,6 +3,7 @@ package br.univesp.sensores.entidades;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,12 +13,13 @@ import java.util.Set;
 import org.jboss.logging.Logger;
 
 import br.univesp.sensores.dto.responses.ListaMedicoesResp;
+import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
-import br.univesp.sensores.helpers.EmailHelper;
 import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
+import br.univesp.sensores.services.EmailService;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.persistence.CascadeType;
@@ -35,17 +37,27 @@ public class Alerta implements Serializable {
 	
 	private static final Logger LOGGER = Logger.getLogger( Alerta.class.getName());
 
+	public static TipoAlerta toAlerta(Integer codigo) {
+		return EnumHelper.getEnumFromCodigo(codigo,TipoAlerta.class);
+	}
 	public enum TipoAlerta implements IEnumDescritivel {
-		TEMPERATURA(1),
-		UMIDADE(2);
+		TEMPERATURA(1,"Temperatura"),
+		UMIDADE(2,"Umidade");
 		private Integer codigo;
-		TipoAlerta(Integer codigo){
+		private String descAmigavel;
+		TipoAlerta(Integer codigo, String descAmigavel){
 			this.codigo = codigo;
+			this.descAmigavel = descAmigavel;
 		}
 		@Override
 		public Integer getCodigo() {
 			return this.codigo;		
 		}
+		
+		public String getDescAmigavel() {
+			return descAmigavel;
+		}
+		
 		@Override
 		public String getDescricao() {
 			return "Tipo de alerta";
@@ -113,7 +125,7 @@ public class Alerta implements Serializable {
 		
 	}	
 	
-	public void enviarAlerta(List<ListaMedicoesResp> medicao, EmailHelper email) {
+	public void enviarAlerta(List<ListaMedicoesResp> medicoes, EmailService email) {
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
 		
 		//verifica se já se passaram X segundos desde o último envio
@@ -121,23 +133,33 @@ public class Alerta implements Serializable {
 				this.dtUltimoEnvio.until(LocalDateTime.now(), ChronoUnit.SECONDS) < this.intervaloEsperaSegundos)
 			return;
 		
-		Boolean enviar = medicao.stream().filter(m -> {
+		medicoes.stream().filter(m -> {
 			return switch (tipoAlerta) {
 			case TEMPERATURA -> checkRange(m.vlTemperatura());
 			case UMIDADE -> checkRange(m.vlUmidade());
 			default -> throw new ErroNegocioException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
 			};
-		}).findAny().isPresent();
-		
-	
-		if (enviar) {
+		}).findAny().ifPresent(medicao -> {
 			LocalDateTime agora = LocalDateTime.now();
+			email.enviarEmail(this.destinatarios,montarEmailAlerta(medicao));
 			this.alertasEnviados.add(new AlertaEnviado(this,agora));
 			this.dtUltimoEnvio = agora;
-			LOGGER.fatal("enviando o alerta para " + this.destinatarios);
-			email.enviarEmail(this.destinatarios,"");
-		}
+		});
 	
+	}
+	
+	private final static DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	private String montarEmailAlerta(ListaMedicoesResp medicao) {
+		
+		String template = ConfigHelper.getInstance().getEmailTemplateEmailAlerta();
+		return template
+				.replace("${tipoAlerta}", this.getTipoAlerta().getDescAmigavel())
+				.replace("${vlTemperatura}", medicao.vlTemperatura().toPlainString())
+				.replace("${vlUmidade}", medicao.vlUmidade().toPlainString())
+				.replace("${dtCriacao}", this.getDtCriado().format(datePattern))
+				.replace("${vlMin}", this.getVlMin().toPlainString())
+				.replace("${vlMax}", this.getVlMax().toPlainString())
+				.replace("${dtUltimoEnvio}",this.dtUltimoEnvio == null? "N/A" : this.dtUltimoEnvio.format(datePattern));
 	}
 	
 	private void validarIntervalo(Integer intervalo) {
@@ -172,8 +194,8 @@ public class Alerta implements Serializable {
 		return isHabilitado;
 	}
 
-	public Integer getTipoAlerta() {
-		return tipoAlerta;
+	public TipoAlerta getTipoAlerta() {
+		return Alerta.toAlerta(tipoAlerta);
 	}
 
 	public Integer getIntervaloEsperaSegundos() {

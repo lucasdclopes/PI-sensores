@@ -1,5 +1,21 @@
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 	<style type=text/css>
+    html {
+     font-family: Arial;
+     display: inline-block;
+     margin: 0px auto;
+     text-align: center;
+    }
+    h2 { font-size: 3.0rem; }
+    p { font-size: 3.0rem; }
+    .units { font-size: 1.2rem; }
+    .dht-labels{
+      font-size: 1.5rem;
+      vertical-align:middle;
+      padding-bottom: 15px;
+    }
 	table {
 	  border-collapse: collapse;
 	}
@@ -30,68 +46,40 @@
 		margin: 0 auto;
 	}
 	</style>
-	</head>
+</head>
 	
-	<body>
+<body>
+	<h2>Alerta de ${tipoAlerta}</h2>
+	<p>
+		<i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
+		<span class="dht-labels">Temperatura</span> 
+		<span id="temperature">${vlTemperatura}</span>
+		<sup class="units">&deg;C</sup>
+	</p>
+	<p>
+		<i class="fas fa-tint" style="color:#00add6;"></i> 
+		<span class="dht-labels">Umidade</span>
+		<span id="humidity">${vlUmidade}%</span>
+		<sup class="units">%</sup>
+	</p>
 	<div class="tabelasdiv">
 		<table>
-		  <caption><h3>Informações gerais</h3></caption>
+		  <caption><h3>Informações do alerta</h3></caption>
 		  <tr>
-		    <th>Mensagem retornada ao usuário</th>
-		    <td>${msgUsuario}</td>
-		  </tr>
-		  <tr>
-		    <th>Módulo</th>
-		    <td>${modulo}</td>
+		    <th>Criado em</th>
+		    <td>${dtCriacao}</td>
 		  </tr>
 		   <tr>
-		    <th>Hora da montagem do email</th>
-		    <td>${timeStamp}</td>
-		  </tr>
-		   <tr>
-		    <th>Versão do Sistema</th>
-		    <td>${sistemaVersao}</td>
-		  </tr>
-		</table>
-	
-		<table>
-		  <caption><h3>Dados do usuário</h3></caption>
-		  <tr>
-		    <th>Id</th>
-		    <td>${idUsuario}</td>
+		    <th>${tipoAlerta} máxima</th>
+		    <td>${vlMax}</td>
 		  </tr>
 		  <tr>
-		    <th>Operação</th>
-		    <td>${idUsuarioOperacao}</td>
+		    <th>${tipoAlerta} mínima</th>
+		    <td>${vlMin}</td>
 		  </tr>
 		   <tr>
-		    <th>E-mail</th>
-		    <td>${usuarioEmail}</td>
-		  </tr>
-		   <tr>
-		    <th>Nome</th>
-		    <td>${usuarioNome}</td>
-		  </tr>
-		</table>
-	
-		<br><br> 
-		<table>
-		  <caption><h3>Outros dados da request / response</h3>(valores null se não existir)</caption>
-		  <tr>
-		    <th>Request body</th>
-		    <td>${requestJson}</td>
-		  </tr>
-		  <tr>
-		    <th>Url params</th>
-		    <td>${requestQueryParams}</td>
-		  </tr>
-		   <tr>
-		    <th>Mensagem especial</th>
-		    <td>${msgEspecial}</td>
-		  </tr>
-		   <tr>
-		    <th>Código de retorno</th>
-		    <td>${responseStatus}</td>
+		    <th>Último disparo</th>
+		    <td>${dtUltimoEnvio}</td>
 		  </tr>
 		</table>
 	</div>

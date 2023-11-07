@@ -1,4 +1,4 @@
-package br.univesp.sensores.helpers;
+package br.univesp.sensores.services;
 
 import java.time.LocalDateTime;
 import java.util.Properties;
@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 
 import br.univesp.sensores.dao.LogErrosDao;
 import br.univesp.sensores.entidades.LogErrosSistema;
+import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.concurrent.ManagedThreadFactory;
@@ -25,7 +26,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 
 @Stateless
-public class EmailHelper {
+public class EmailService {
 	
 	@Inject private LogErrosDao errosDao;
 

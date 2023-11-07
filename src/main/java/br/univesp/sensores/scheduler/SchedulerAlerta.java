@@ -14,7 +14,7 @@ import br.univesp.sensores.dto.responses.ListaMedicoesResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
-import br.univesp.sensores.helpers.EmailHelper;
+import br.univesp.sensores.services.EmailService;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -34,7 +34,7 @@ public class SchedulerAlerta extends SchedulerTemplate {
 	
 	@Inject private AlertaDao alertaDao;
 	@Inject private MedicaoDao medicaoDao;
-	@Inject private EmailHelper email;
+	@Inject private EmailService email;
 	
 	@Override
 	protected void executarTarefaAgendada() {
