@@ -48,9 +48,9 @@
 			<artifactId>jakarta.enterprise.cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>		
-		    <groupId>jakarta.enterprise.concurrent</groupId>
-		    <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+		<dependency>
+			<groupId>jakarta.enterprise.concurrent</groupId>
+			<artifactId>jakarta.enterprise.concurrent-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -59,14 +59,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>jakarta.mail</groupId>
-		    <artifactId>jakarta.mail-api</artifactId>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-email</artifactId>
-		    <version>1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly</groupId>
@@ -86,8 +81,8 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.hibernate.orm</groupId>
-		    <artifactId>hibernate-core</artifactId>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
