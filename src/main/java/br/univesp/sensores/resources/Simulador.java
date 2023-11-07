@@ -1,6 +1,9 @@
 package br.univesp.sensores.resources;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.naming.InitialContext;
@@ -96,7 +99,11 @@ public class Simulador {
 	@POST
 	@Path("/testar-email")
 	public Response enviarEmail() {
-		mail.enviarEmail("lucas.dc.lopes@gmail.com",ConfigHelper.getInstance().getEmailTemplateEmailAlerta());
+		ConfigHelper config = ConfigHelper.getInstance();
+		Map<String,File> anexos = new HashMap<>();
+		anexos.put("temperature", config.getResourceFile("temperature.png"));
+		anexos.put("umidity", config.getResourceFile("umidity.png"));
+		mail.enviarEmail("lucas.dc.lopes@gmail.com",config.getEmailTemplateEmailAlerta(),anexos);
 		return Response.ok().build();
 	}
 	

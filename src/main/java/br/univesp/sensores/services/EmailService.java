@@ -1,6 +1,9 @@
 package br.univesp.sensores.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.InitialContext;
@@ -30,7 +33,7 @@ public class EmailService {
 	
 	@Inject private LogErrosDao errosDao;
 
-	public void enviarEmail(String emails, String mensagem) {
+	public void enviarEmail(String emails, String mensagem, Map<String,File> anexos) {
 		
 		ConfigHelper config = ConfigHelper.getInstance();
 		
@@ -63,9 +66,19 @@ public class EmailService {
 			
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(mimeBodyPart);
+			
+			for (var anexo : anexos.entrySet()) {
+				MimeBodyPart imagePart = new MimeBodyPart();
+				imagePart.setHeader("Content-ID", "<"+anexo.getKey()+">");
+				imagePart.setDisposition(MimeBodyPart.INLINE);
+				// attach the image file
+				imagePart.attachFile(anexo.getValue());
+				multipart.addBodyPart(imagePart);
+			}
+			
 	
 			message.setContent(multipart);
-		} catch (MessagingException e) {
+		} catch (MessagingException | IOException e) {
 			throw new RuntimeException("Erro durante a configuração do email",e);
 		}
 		

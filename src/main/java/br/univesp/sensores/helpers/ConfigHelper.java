@@ -1,6 +1,7 @@
 package br.univesp.sensores.helpers;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,6 +96,10 @@ public class ConfigHelper {
 			return false;
 		else 
 			throw new RuntimeException("O valor da chave " + chave  + " deveria ser true ou false");	
+	}
+	
+	public File getResourceFile(String fileName) {
+		return new File(loader.getResource(fileName).getFile());
 	}
 	
 	public String getEmailTemplateEmailAlerta() {

@@ -1,19 +1,21 @@
 package br.univesp.sensores.entidades;
 
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jboss.logging.Logger;
 
 import br.univesp.sensores.dto.responses.ListaMedicoesResp;
-import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -141,7 +143,13 @@ public class Alerta implements Serializable {
 			};
 		}).findAny().ifPresent(medicao -> {
 			LocalDateTime agora = LocalDateTime.now();
-			email.enviarEmail(this.destinatarios,montarEmailAlerta(medicao));
+			
+			ConfigHelper config = ConfigHelper.getInstance();
+			Map<String,File> anexos = new HashMap<>();
+			anexos.put("temperature", config.getResourceFile("temperature.png"));
+			anexos.put("umidity", config.getResourceFile("umidity.png"));
+			
+			email.enviarEmail(this.destinatarios,montarEmailAlerta(medicao),anexos);
 			this.alertasEnviados.add(new AlertaEnviado(this,agora));
 			this.dtUltimoEnvio = agora;
 		});

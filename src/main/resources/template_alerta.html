@@ -1,69 +1,92 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 	<style type=text/css>
-    html {
-     font-family: Arial;
-     display: inline-block;
-     margin: 0px auto;
-     text-align: center;
-    }
-    h2 { font-size: 3.0rem; }
-    p { font-size: 3.0rem; }
-    .units { font-size: 1.2rem; }
-    .dht-labels{
-      font-size: 1.5rem;
-      vertical-align:middle;
-      padding-bottom: 15px;
-    }
+
+
 	table {
 	  border-collapse: collapse;
 	}
 	
 	td, th {
-	  border: 1px solid #dddddd;
-	  text-align: left;
-	  padding: 8px;
+		text-align: left;
+		padding: 8px;
 	}
 	
-	tr:nth-child(even) {
-	  background-color: #dddddd;
+
+	.vl-sensor { font-size: 2.5rem; }
+
+	.units { font-size: 1.2rem; }
+
+
+	.dht-labels{
+		font-size: 1.5rem;
+		vertical-align:middle;
 	}
-	
+	  
+	.imagens-sensor {
+		width:96px;
+		height:96px;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
 	.tabelasdiv {
+		border: none;
 		margin: 0 auto;
 		display: table;
 	}
-	
-	.avisosdiv {
-		border: 1px solid red;
-		display: table;
-	
+
+	.tabela-sensor {
+		border: none;
+		text-align: left;
 	}
-	.stacktracediv {
-		display: table;
+
+	.tabela-dados table {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+	}
+
+	.tabela-dados th {
+		border: 1px solid #dddddd;
+	}
+
+	.tabela-dados tr {
+		border: 1px solid #dddddd;
+	}
+
+	.tabela-dados td {
+		border: 1px solid #dddddd;
+	}
+
+	.tabela-dados tr:nth-child(even) {
 		background-color: #dddddd;
-		margin: 0 auto;
 	}
+
 	</style>
 </head>
 	
 <body>
-	<h2>Alerta de ${tipoAlerta}</h2>
-	<p>
-		<i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-		<span class="dht-labels">Temperatura</span> 
-		<span id="temperature">${vlTemperatura}</span>
-		<sup class="units">&deg;C</sup>
-	</p>
-	<p>
-		<i class="fas fa-tint" style="color:#00add6;"></i> 
-		<span class="dht-labels">Umidade</span>
-		<span id="humidity">${vlUmidade}%</span>
-		<sup class="units">%</sup>
-	</p>
+		
 	<div class="tabelasdiv">
-		<table>
+		<caption><h2>Alerta de ${tipoAlerta}</h2></caption>
+		<table class="tabela-sensor">
+			<tr>
+				<th><img class="imagens-sensor" src="cid:temperature" /></th>
+				<td><span class="dht-labels">Temperatura</span> 
+				<span class="vl-sensor">${vlTemperatura}</span>
+				<sup class="units">&deg;C</sup></h2> </td>
+			</tr>
+			<tr>
+				<th><img class="imagens-sensor" src="cid:umidity" /></th>
+				<td><span class="dht-labels">Umidade</span>
+				<span class="vl-sensor">${vlUmidade}</span>
+				<sup class="units">%</sup> </td>
+			</tr>				
+		</table>
+	</div>
+	<div class="tabelasdiv">
+		<table class="tabela-dados">
 		  <caption><h3>Informações do alerta</h3></caption>
 		  <tr>
 		    <th>Criado em</th>
