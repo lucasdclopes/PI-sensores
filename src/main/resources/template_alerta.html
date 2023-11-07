@@ -1,0 +1,98 @@
+<head>
+	<style type=text/css>
+	table {
+	  border-collapse: collapse;
+	}
+	
+	td, th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+	
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
+	
+	.tabelasdiv {
+		margin: 0 auto;
+		display: table;
+	}
+	
+	.avisosdiv {
+		border: 1px solid red;
+		display: table;
+	
+	}
+	.stacktracediv {
+		display: table;
+		background-color: #dddddd;
+		margin: 0 auto;
+	}
+	</style>
+	</head>
+	
+	<body>
+	<div class="tabelasdiv">
+		<table>
+		  <caption><h3>Informações gerais</h3></caption>
+		  <tr>
+		    <th>Mensagem retornada ao usuário</th>
+		    <td>${msgUsuario}</td>
+		  </tr>
+		  <tr>
+		    <th>Módulo</th>
+		    <td>${modulo}</td>
+		  </tr>
+		   <tr>
+		    <th>Hora da montagem do email</th>
+		    <td>${timeStamp}</td>
+		  </tr>
+		   <tr>
+		    <th>Versão do Sistema</th>
+		    <td>${sistemaVersao}</td>
+		  </tr>
+		</table>
+	
+		<table>
+		  <caption><h3>Dados do usuário</h3></caption>
+		  <tr>
+		    <th>Id</th>
+		    <td>${idUsuario}</td>
+		  </tr>
+		  <tr>
+		    <th>Operação</th>
+		    <td>${idUsuarioOperacao}</td>
+		  </tr>
+		   <tr>
+		    <th>E-mail</th>
+		    <td>${usuarioEmail}</td>
+		  </tr>
+		   <tr>
+		    <th>Nome</th>
+		    <td>${usuarioNome}</td>
+		  </tr>
+		</table>
+	
+		<br><br> 
+		<table>
+		  <caption><h3>Outros dados da request / response</h3>(valores null se não existir)</caption>
+		  <tr>
+		    <th>Request body</th>
+		    <td>${requestJson}</td>
+		  </tr>
+		  <tr>
+		    <th>Url params</th>
+		    <td>${requestQueryParams}</td>
+		  </tr>
+		   <tr>
+		    <th>Mensagem especial</th>
+		    <td>${msgEspecial}</td>
+		  </tr>
+		   <tr>
+		    <th>Código de retorno</th>
+		    <td>${responseStatus}</td>
+		  </tr>
+		</table>
+	</div>
+</body>

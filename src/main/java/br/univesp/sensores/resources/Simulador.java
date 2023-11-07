@@ -96,7 +96,7 @@ public class Simulador {
 	@POST
 	@Path("/testar-email")
 	public Response enviarEmail() {
-		mail.enviarEmail("lucas.dc.lopes@gmail.com");
+		mail.enviarEmail("lucas.dc.lopes@gmail.com",ConfigHelper.getInstance().getEmailTemplateEmailAlerta());
 		return Response.ok().build();
 	}
 	

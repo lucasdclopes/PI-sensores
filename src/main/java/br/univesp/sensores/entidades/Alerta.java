@@ -135,7 +135,7 @@ public class Alerta implements Serializable {
 			this.alertasEnviados.add(new AlertaEnviado(this,agora));
 			this.dtUltimoEnvio = agora;
 			LOGGER.fatal("enviando o alerta para " + this.destinatarios);
-			email.enviarEmail(this.destinatarios);
+			email.enviarEmail(this.destinatarios,"");
 		}
 	
 	}

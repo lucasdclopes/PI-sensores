@@ -1,14 +1,37 @@
 package br.univesp.sensores.helpers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-public class ConfigHelper {
+import org.jboss.logging.Logger;
 
-	private final static InputStream input = Thread.currentThread()
-			.getContextClassLoader()
-			.getResourceAsStream("config.properties");
+public class ConfigHelper {
+	
+	private static final Logger LOGGER = Logger.getLogger(ConfigHelper.class.getName());
+	
+	private final static ClassLoader loader = Thread.currentThread().getContextClassLoader();
+	private final static InputStream inputConfigs = loader.getResourceAsStream("config.properties");
+	private final static String EMAIL_ALERTA; 
+	static {
+		StringBuilder builder = new StringBuilder(2200);
+		try (InputStream is = loader.getResourceAsStream("template_alerta.html");//src/main/resources
+				InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+				BufferedReader reader = new BufferedReader(streamReader)) {
+
+			String linha;
+			while ((linha = reader.readLine()) != null) {
+				builder.append(linha);
+			}
+		} catch (IOException e) {
+			LOGGER.fatal("Não é possível inicializar o sistema por um problema no carregamento do html do email de alerta",e);
+		}
+		EMAIL_ALERTA = builder.toString();
+	}
+	
 	private final static Properties properties = new Properties();
 	private static ConfigHelper singleton = null;
 	
@@ -41,7 +64,7 @@ public class ConfigHelper {
 			}
 		}
 		try {
-			properties.load(input);
+			properties.load(inputConfigs);
 		} catch (IOException e) {
 			throw new RuntimeException("Não foi possível carregar as configurações do sistema, " + e.getMessage(),e);
 		}
@@ -72,5 +95,9 @@ public class ConfigHelper {
 			return false;
 		else 
 			throw new RuntimeException("O valor da chave " + chave  + " deveria ser true ou false");	
+	}
+	
+	public String getEmailTemplateEmailAlerta() {
+		return EMAIL_ALERTA;
 	}
 }
