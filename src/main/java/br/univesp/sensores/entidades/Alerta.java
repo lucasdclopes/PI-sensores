@@ -137,7 +137,7 @@ public class Alerta implements Serializable {
 			return switch (tipoAlerta) {
 			case TEMPERATURA -> checkRange(m.vlTemperatura());
 			case UMIDADE -> checkRange(m.vlUmidade());
-			default -> throw new ErroNegocioException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
+			default -> throw new RuntimeException("Não existe definição para o tipo de alerta (" + tipoAlerta.toString() + ") informado");
 			};
 		}).findAny().ifPresent(medicao -> {
 			LocalDateTime agora = LocalDateTime.now();
@@ -175,7 +175,7 @@ public class Alerta implements Serializable {
 	}
 	
 	private Set<String> validarEmails(String destinatarios) {
-		Set<String> emails = new HashSet<String>(Arrays.asList(destinatarios.split(";"))); //jogar em um SET elimina os duplicados
+		Set<String> emails = new HashSet<String>(Arrays.asList(destinatarios.split(","))); //jogar em um SET elimina os duplicados
 		emails.forEach(mail -> {
 			try {
 				new InternetAddress(mail).validate();

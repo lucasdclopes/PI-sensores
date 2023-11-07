@@ -30,7 +30,7 @@ public class SchedulerAlerta extends SchedulerTemplate {
 	private static final Logger LOGGER = Logger.getLogger( SchedulerTemplate.class.getName());
 	
 	private ConfigHelper config = ConfigHelper.getInstance();
-	private LocalDateTime medicaoMaisRecente = LocalDateTime.now().minus(30,ChronoUnit.SECONDS); //inicia obtendo os últimos 30 segundos
+	private LocalDateTime medicaoMaisRecente = LocalDateTime.now().minus(60,ChronoUnit.SECONDS); //inicia obtendo os últimos 30 segundos
 	
 	@Inject private AlertaDao alertaDao;
 	@Inject private MedicaoDao medicaoDao;
