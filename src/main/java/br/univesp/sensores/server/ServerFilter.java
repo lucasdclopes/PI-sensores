@@ -28,7 +28,12 @@ public class ServerFilter implements ContainerRequestFilter {
 		requestContext.setEntityStream(objetoParseado.streamCopia()); //devolve uma cópia do stream pro server
 		String payload = objetoParseado.streamOriginal().toString(StandardCharsets.UTF_8); 
 		
-		LOGGER.log(Level.INFO,"payloadRequest: " + payload);
+		LOGGER.log(Level.INFO,String.format(
+				"Requisição recebida. %s %s PayloadRequest: %s. ",
+				requestContext.getMethod(),
+				requestContext.getUriInfo().getRequestUri().toString(),
+				payload
+				));
 		
 	}
 	
