@@ -9,6 +9,8 @@ import java.util.Optional;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.responses.AlertaItemResp;
+import br.univesp.sensores.dto.responses.AlertaListaResp;
+import br.univesp.sensores.dto.responses.AlertasEnviadosListaResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
@@ -46,24 +48,37 @@ public class AlertaDao {
 				);
 	}
 	
-	public List<AlertaItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
+	public AlertaListaResp listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
+		
+		String where = "WHERE 1 = 1 ";
 		String jpql = """
 				select new br.univesp.sensores.dto.responses.AlertaItemResp (
 					a.idAlerta,a.isHabilitado,a.tipoAlerta,a.intervaloEsperaSegundos,
 					a.vlMax,a.vlMin,a.dtCriado,a.destinatarios
-				) from Alerta a
-				WHERE 1 = 1 
+				) from Alerta a 
 				""";
 		final String orderBy = " order by a.dtCriado desc ";
 		Map<String,Object> params = new HashMap<>();
 		
-		jpql += DaoHelper.addWhereRangeData(params, dtParams, "a.dtCriado");
+		where += DaoHelper.addWhereRangeData(params, dtParams, "a.dtCriado");
 		jpql += orderBy;
 		
 		TypedQuery<AlertaItemResp> query = em.createQuery(jpql, AlertaItemResp.class);
 		params.forEach(query::setParameter);
 		
-		return paginacao.configurarPaginacao(query).getResultList();
+		String jpqlCount = """
+				select count(a.idAlerta) from Alerta a 
+				""" + where;
+			
+		TypedQuery<Long> queryCount = em.createQuery(jpqlCount, Long.class);
+		params.forEach(queryCount::setParameter);
+		Long total = queryCount.getSingleResult();
+		
+		List<AlertaItemResp> resultList = paginacao.configurarPaginacao(query).getResultList();
+		return new AlertaListaResp(
+				DaoHelper.infoPaginas(paginacao, total, resultList.size()),
+				resultList
+				);
 				
 	}
 	
@@ -78,7 +93,7 @@ public class AlertaDao {
 		return em.createQuery(jpql, Alerta.class).getResultList();
 	}
 	
-	public List<LocalDateTime> listarEnviados(final Long idAlerta, final PaginacaoQueryParams paginacao){
+	public AlertasEnviadosListaResp listarEnviados(final Long idAlerta, final PaginacaoQueryParams paginacao){
 		
 		String jpql = """
 				select e.dtEnvio from AlertaEnviado e 
@@ -86,10 +101,22 @@ public class AlertaDao {
 				order by e.dtEnvio desc
 				""";
 		
-		return  paginacao.configurarPaginacao(
+		String jpqlCount = """
+				select count(e.idEnviado) from AlertaEnviado e 
+				where e.alerta.idAlerta = :idAlerta 
+				""";
+			
+		Long total = em.createQuery(jpqlCount, Long.class).setParameter("idAlerta", idAlerta).getSingleResult();
+		
+		List<LocalDateTime> resultList = paginacao.configurarPaginacao(
 				em.createQuery(jpql, LocalDateTime.class))
 				.setParameter("idAlerta", idAlerta)
 				.getResultList();
+		
+		return new AlertasEnviadosListaResp(
+				DaoHelper.infoPaginas(paginacao, total, resultList.size()),
+				resultList
+				);
 	}
 	
 	@Transactional(value = TxType.REQUIRED)

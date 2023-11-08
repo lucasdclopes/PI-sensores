@@ -1,14 +1,12 @@
 package br.univesp.sensores.resources;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import br.univesp.sensores.dao.AlertaDao;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.AtualizarAlerta;
 import br.univesp.sensores.dto.requests.NovoAlerta;
-import br.univesp.sensores.dto.responses.AlertaItemResp;
+import br.univesp.sensores.dto.responses.AlertaListaResp;
+import br.univesp.sensores.dto.responses.AlertasEnviadosListaResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ResourceHelper;
@@ -39,11 +37,14 @@ public class AlertaResource {
 	@GET
 	public Response getAlertas(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		List<AlertaItemResp> lista = alertaDao.listar(paginacao,dtParams);
-		if (lista.isEmpty())
+		AlertaListaResp db = alertaDao.listar(paginacao,dtParams);
+		if (db.alerta().isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		
-		return Response.ok().entity(lista).build();
+		return Response.ok().entity(db.alerta())
+				.header("page-quantidade", db.page().pageQuantidade())
+				.header("page-has-proxima", db.page().hasProxima())
+				.build();
 	}
 	
 	@GET
@@ -51,11 +52,14 @@ public class AlertaResource {
 	public Response getAlertasEnviados(@PathParam("idAlerta") final Long idAlerta, 
 			@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		List<LocalDateTime> lista = alertaDao.listarEnviados(idAlerta,paginacao);
-		if (lista.isEmpty())
+		AlertasEnviadosListaResp db = alertaDao.listarEnviados(idAlerta,paginacao);
+		if (db.envios().isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		
-		return Response.ok().entity(lista).build();
+		return Response.ok().entity(db.envios())
+				.header("page-quantidade", db.page().pageQuantidade())
+				.header("page-has-proxima", db.page().hasProxima())
+				.build();
 	}
 	
 	@POST

@@ -37,12 +37,11 @@ public class MedicaoDao {
 	public MedicaoListaResp listar(final PaginacaoQueryParams paginacao, final DtParams dtParams, boolean tempoReal) {
 		
 		Long total = 0L;
-		String where = "";
+		String where = "WHERE 1 = 1 ";
 		String jpql = """
 				select new br.univesp.sensores.dto.responses.MedicaoItemResp (
 					m.idMedicao,m.vlTemperatura,m.vlUmidade,m.dtMedicao
-				) from MedicaoSensor m
-				WHERE 1 = 1 
+				) from MedicaoSensor m 
 				""";
 		final String orderBy = " order by m.dtMedicao desc ";
 		Map<String,Object> params = new HashMap<>();
@@ -56,7 +55,6 @@ public class MedicaoDao {
 		if (!tempoReal) { //monitoramento de tempo real não deve utilizar esta informação, além de custar muito desempenho	
 			String jpqlCount = """
 				select count(m.idMedicao) from MedicaoSensor m 
-				WHERE 1 = 1 
 				""" + where;
 			
 			TypedQuery<Long> queryCount = em.createQuery(jpqlCount, Long.class);
