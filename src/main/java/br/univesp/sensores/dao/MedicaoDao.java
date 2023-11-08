@@ -6,7 +6,7 @@ import java.util.Map;
 
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
-import br.univesp.sensores.dto.responses.ListaMedicoesResp;
+import br.univesp.sensores.dto.responses.MedicaoItemResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
@@ -33,7 +33,10 @@ public class MedicaoDao {
 		return sensor.getIdMedicao();
 	}
 	
-	public List<ListaMedicoesResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
+	public List<MedicaoItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams, boolean tempoReal) {
+		
+		Long total = 0L;
+		String where = "";
 		String jpql = """
 				select new br.univesp.sensores.dto.responses.ListaMedicoesResp (
 					m.idMedicao,m.vlTemperatura,m.vlUmidade,m.dtMedicao
@@ -43,11 +46,22 @@ public class MedicaoDao {
 		final String orderBy = " order by m.dtMedicao desc ";
 		Map<String,Object> params = new HashMap<>();
 		
-		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtMedicao");
-		jpql += orderBy;
+		where += DaoHelper.addWhereRangeData(params, dtParams, "dtMedicao");
 		
-		TypedQuery<ListaMedicoesResp> query = em.createQuery(jpql, ListaMedicoesResp.class);
+		jpql += where + orderBy;
+		TypedQuery<MedicaoItemResp> query = em.createQuery(jpql, MedicaoItemResp.class);
 		params.forEach(query::setParameter);
+		
+		if (tempoReal) { //monitoramento de tempo real não deve utilizar esta informação, além de custar muito desempenho	
+			String jpqlCount = """
+				select count(m.idMedicao) from MedicaoSensor m 
+				WHERE 1 = 1 
+				""" + where;
+			
+			TypedQuery<Long> queryCount = em.createQuery(jpqlCount, Long.class);
+			params.forEach(queryCount::setParameter);
+			total = queryCount.getSingleResult();
+		}
 		
 		return paginacao.configurarPaginacao(query).getResultList();
 				

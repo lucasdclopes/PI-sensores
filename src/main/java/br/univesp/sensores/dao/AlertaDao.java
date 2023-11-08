@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
-import br.univesp.sensores.dto.responses.ListaAlertasResp;
+import br.univesp.sensores.dto.responses.AlertaItemResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
@@ -46,7 +46,7 @@ public class AlertaDao {
 				);
 	}
 	
-	public List<ListaAlertasResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
+	public List<AlertaItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
 		String jpql = """
 				select new br.univesp.sensores.dto.responses.ListaAlertasResp (
 					a.idAlerta,a.isHabilitado,a.tipoAlerta,a.intervaloEsperaSegundos,
@@ -60,7 +60,7 @@ public class AlertaDao {
 		jpql += DaoHelper.addWhereRangeData(params, dtParams, "a.dtCriado");
 		jpql += orderBy;
 		
-		TypedQuery<ListaAlertasResp> query = em.createQuery(jpql, ListaAlertasResp.class);
+		TypedQuery<AlertaItemResp> query = em.createQuery(jpql, AlertaItemResp.class);
 		params.forEach(query::setParameter);
 		
 		return paginacao.configurarPaginacao(query).getResultList();

@@ -8,7 +8,7 @@ import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.AtualizarAlerta;
 import br.univesp.sensores.dto.requests.NovoAlerta;
-import br.univesp.sensores.dto.responses.ListaAlertasResp;
+import br.univesp.sensores.dto.responses.AlertaItemResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ResourceHelper;
@@ -39,7 +39,7 @@ public class AlertaResource {
 	@GET
 	public Response getAlertas(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		List<ListaAlertasResp> lista = alertaDao.listar(paginacao,dtParams);
+		List<AlertaItemResp> lista = alertaDao.listar(paginacao,dtParams);
 		if (lista.isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		

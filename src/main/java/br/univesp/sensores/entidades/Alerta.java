@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.jboss.logging.Logger;
 
-import br.univesp.sensores.dto.responses.ListaMedicoesResp;
+import br.univesp.sensores.dto.responses.MedicaoItemResp;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -127,7 +127,7 @@ public class Alerta implements Serializable {
 		
 	}	
 	
-	public void enviarAlerta(List<ListaMedicoesResp> medicoes, EmailService email) {
+	public void enviarAlerta(List<MedicaoItemResp> medicoes, EmailService email) {
 		TipoAlerta tipoAlerta = EnumHelper.getEnumFromCodigo(this.tipoAlerta,TipoAlerta.class);
 		
 		//verifica se já se passaram X segundos desde o último envio
@@ -157,7 +157,7 @@ public class Alerta implements Serializable {
 	}
 	
 	private final static DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	private String montarEmailAlerta(ListaMedicoesResp medicao) {
+	private String montarEmailAlerta(MedicaoItemResp medicao) {
 		
 		String template = ConfigHelper.getInstance().getEmailTemplateEmailAlerta();
 		return template

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
-import br.univesp.sensores.dto.responses.ListaLogErroResp;
+import br.univesp.sensores.dto.responses.LogErroItemResp;
 import br.univesp.sensores.entidades.LogErrosSistema;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
@@ -33,7 +33,7 @@ public class LogErrosDao {
 		return log.getIdLogErros();
 	}
 	
-	public List<ListaLogErroResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
+	public List<LogErroItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
 		String jpql = """
 				select new br.univesp.sensores.dto.responses.ListaLogErro (
 					l.idLogErros,l.msgErro,l.dtLog,l.stacktrace
@@ -46,7 +46,7 @@ public class LogErrosDao {
 		jpql += DaoHelper.addWhereRangeData(params, dtParams, "dtCriado");
 		jpql += orderBy;
 		
-		TypedQuery<ListaLogErroResp> query = em.createQuery(jpql, ListaLogErroResp.class);
+		TypedQuery<LogErroItemResp> query = em.createQuery(jpql, LogErroItemResp.class);
 		params.forEach(query::setParameter);
 		
 		return paginacao.configurarPaginacao(query).getResultList();

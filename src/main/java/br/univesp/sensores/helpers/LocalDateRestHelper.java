@@ -20,7 +20,8 @@ public class LocalDateRestHelper {
 	@Provider
 	public static class LocalDateParamConverterProvider implements ParamConverterProvider {
 
-	    @Override
+	    @SuppressWarnings("unchecked") //não há necessidade de checagem pelo type, neste caso é garantido pelo framework
+		@Override
 	    public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType,//java.lang.reflect.Type;
 	            Annotation[] annotations) {
 	        if (rawType.equals(LocalDateTime.class))

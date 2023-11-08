@@ -6,7 +6,7 @@ import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
-import br.univesp.sensores.dto.responses.ListaMedicoesResp;
+import br.univesp.sensores.dto.responses.MedicaoItemResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -34,10 +34,12 @@ public class MedicaoResource {
 	
 	@Inject MedicaoDao medicaoDao;
 	
+	
 	@GET
-	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
+	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams, 
+			@Valid @QueryParam("tempoReal") final Boolean tempoReal) {
 		
-		List<ListaMedicoesResp> lista = medicaoDao.listar(paginacao,dtParams);
+		List<MedicaoItemResp> lista = medicaoDao.listar(paginacao,dtParams,tempoReal);
 		if (lista.isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		

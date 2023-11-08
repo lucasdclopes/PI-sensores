@@ -10,7 +10,7 @@ import br.univesp.sensores.dao.AlertaDao;
 import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
-import br.univesp.sensores.dto.responses.ListaMedicoesResp;
+import br.univesp.sensores.dto.responses.MedicaoItemResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -53,7 +53,7 @@ public class SchedulerAlerta extends SchedulerTemplate {
 			if (alertas.isEmpty())
 				return;
 			
-			List<ListaMedicoesResp> medicoes = medicaoDao.listar(new PaginacaoQueryParams(50, 1), new DtParams(medicaoMaisRecente, null));
+			List<MedicaoItemResp> medicoes = medicaoDao.listar(new PaginacaoQueryParams(50, 1), new DtParams(medicaoMaisRecente, null));
 			if (medicoes.isEmpty())
 				return;
 			
