@@ -48,7 +48,7 @@ public class AlertaDao {
 	
 	public List<AlertaItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
 		String jpql = """
-				select new br.univesp.sensores.dto.responses.ListaAlertasResp (
+				select new br.univesp.sensores.dto.responses.AlertaItemResp (
 					a.idAlerta,a.isHabilitado,a.tipoAlerta,a.intervaloEsperaSegundos,
 					a.vlMax,a.vlMin,a.dtCriado,a.destinatarios
 				) from Alerta a

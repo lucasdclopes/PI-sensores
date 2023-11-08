@@ -1,12 +1,10 @@
 package br.univesp.sensores.resources;
 
-import java.util.List;
-
 import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
-import br.univesp.sensores.dto.responses.MedicaoItemResp;
+import br.univesp.sensores.dto.responses.MedicaoListaResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -37,13 +35,16 @@ public class MedicaoResource {
 	
 	@GET
 	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams, 
-			@Valid @QueryParam("tempoReal") final Boolean tempoReal) {
+			@Valid @QueryParam("tempoReal") final boolean tempoReal) {
 		
-		List<MedicaoItemResp> lista = medicaoDao.listar(paginacao,dtParams,tempoReal);
-		if (lista.isEmpty())
+		MedicaoListaResp medicoes = medicaoDao.listar(paginacao,dtParams,tempoReal);
+		if (medicoes.medicoes().isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		
-		return Response.ok().entity(lista).build();
+		return Response.ok().entity(medicoes.medicoes())
+				.header("page-quantidade", medicoes.page().pageQuantidade())
+				.header("page-has-proxima", medicoes.page().hasProxima())
+				.build();
 	}
 	
 	@POST

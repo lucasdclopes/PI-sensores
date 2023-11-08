@@ -3,6 +3,7 @@ package br.univesp.sensores.helpers;
 import java.util.Map;
 
 import br.univesp.sensores.dto.queryparams.DtParams;
+import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 
 public class DaoHelper {
 
@@ -36,5 +37,19 @@ public class DaoHelper {
 		
 		return paramsWhere;
 		
+	}
+	
+	public record Page (Long pageQuantidade,Boolean hasProxima) {}
+	public static Page infoPaginas(PaginacaoQueryParams paginacao,Long totalRegistros,Integer registrosNaPagina) {
+		
+		Long totalPaginas = totalRegistros / paginacao.getNroLinhas() + (totalRegistros % paginacao.getNroLinhas() == 0 ? 0 : 1);
+		
+		if (registrosNaPagina < paginacao.getNroLinhas())
+			return new Page(totalPaginas, false);
+
+		return new Page(
+				totalPaginas,
+				(paginacao.getNroLinhas() * paginacao.getNroPagina() < totalRegistros)
+				);
 	}
 }

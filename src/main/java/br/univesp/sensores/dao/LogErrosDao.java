@@ -35,7 +35,7 @@ public class LogErrosDao {
 	
 	public List<LogErroItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
 		String jpql = """
-				select new br.univesp.sensores.dto.responses.ListaLogErro (
+				select new br.univesp.sensores.dto.responses.LogErroItemResp (
 					l.idLogErros,l.msgErro,l.dtLog,l.stacktrace
 				) from LogErrosSistema l
 				WHERE 1 = 1 

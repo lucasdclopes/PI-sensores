@@ -7,6 +7,7 @@ import java.util.Map;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.responses.MedicaoItemResp;
+import br.univesp.sensores.dto.responses.MedicaoListaResp;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
@@ -33,12 +34,12 @@ public class MedicaoDao {
 		return sensor.getIdMedicao();
 	}
 	
-	public List<MedicaoItemResp> listar(final PaginacaoQueryParams paginacao, final DtParams dtParams, boolean tempoReal) {
+	public MedicaoListaResp listar(final PaginacaoQueryParams paginacao, final DtParams dtParams, boolean tempoReal) {
 		
 		Long total = 0L;
 		String where = "";
 		String jpql = """
-				select new br.univesp.sensores.dto.responses.ListaMedicoesResp (
+				select new br.univesp.sensores.dto.responses.MedicaoItemResp (
 					m.idMedicao,m.vlTemperatura,m.vlUmidade,m.dtMedicao
 				) from MedicaoSensor m
 				WHERE 1 = 1 
@@ -52,7 +53,7 @@ public class MedicaoDao {
 		TypedQuery<MedicaoItemResp> query = em.createQuery(jpql, MedicaoItemResp.class);
 		params.forEach(query::setParameter);
 		
-		if (tempoReal) { //monitoramento de tempo real não deve utilizar esta informação, além de custar muito desempenho	
+		if (!tempoReal) { //monitoramento de tempo real não deve utilizar esta informação, além de custar muito desempenho	
 			String jpqlCount = """
 				select count(m.idMedicao) from MedicaoSensor m 
 				WHERE 1 = 1 
@@ -62,8 +63,11 @@ public class MedicaoDao {
 			params.forEach(queryCount::setParameter);
 			total = queryCount.getSingleResult();
 		}
-		
-		return paginacao.configurarPaginacao(query).getResultList();
+		List<MedicaoItemResp> resultList = paginacao.configurarPaginacao(query).getResultList();
+		return new MedicaoListaResp(
+				DaoHelper.infoPaginas(paginacao, total, resultList.size()),
+				resultList
+				);
 				
 	}
 }

@@ -53,7 +53,9 @@ public class SchedulerAlerta extends SchedulerTemplate {
 			if (alertas.isEmpty())
 				return;
 			
-			List<MedicaoItemResp> medicoes = medicaoDao.listar(new PaginacaoQueryParams(50, 1), new DtParams(medicaoMaisRecente, null));
+			List<MedicaoItemResp> medicoes = medicaoDao.listar(
+					new PaginacaoQueryParams(50, 1), new DtParams(medicaoMaisRecente, null),true
+					).medicoes();
 			if (medicoes.isEmpty())
 				return;
 			
