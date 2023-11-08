@@ -11,6 +11,7 @@ public record AlertaItemResp(
 		BigDecimal vlMax,
 		BigDecimal vlMin,
 		LocalDateTime dtCriado,
+		LocalDateTime dtUltimoEnvio,
 		String destinatarios
 		) {
 
