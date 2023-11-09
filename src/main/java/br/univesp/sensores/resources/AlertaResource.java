@@ -9,6 +9,8 @@ import br.univesp.sensores.dto.responses.AlertaListaResp;
 import br.univesp.sensores.dto.responses.AlertasEnviadosListaResp;
 import br.univesp.sensores.entidades.Alerta;
 import br.univesp.sensores.erros.ErroNegocioException;
+import br.univesp.sensores.helpers.ConfigHelper;
+import br.univesp.sensores.helpers.ConfigHelper.Chaves;
 import br.univesp.sensores.helpers.ResourceHelper;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -65,6 +67,11 @@ public class AlertaResource {
 	@POST
 	public Response salvarNovoAlerta(@Valid final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
 		
+		Integer limite = ConfigHelper.getInstance().getConfigInteger(Chaves.ALERTA_LIMITE_TOTAL);
+		AlertaListaResp listar = alertaDao.listar(new PaginacaoQueryParams(100, 1), null);
+		if (listar.page().totalRegistros() > limite)
+			throw new ErroNegocioException("Não é possível criar mais do que " + limite + " alertas. Exclua um alerta existente para poder criar um novo");
+			
 		Alerta alerta = new Alerta(
 				Alerta.toAlerta(novoAlerta.tipoAlerta()), novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin(),novoAlerta.destinatarios()
 				);

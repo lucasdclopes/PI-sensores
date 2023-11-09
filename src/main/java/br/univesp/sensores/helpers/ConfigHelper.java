@@ -38,6 +38,7 @@ public class ConfigHelper {
 	
 	public enum Chaves {
 		ALERTA_INTERVALO_MIN,
+		ALERTA_LIMITE_TOTAL,
 		CORS_URLS_PERMITIDAS,
 		
 		EMAIL_NOME_REMETENTE,

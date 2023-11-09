@@ -39,15 +39,16 @@ public class DaoHelper {
 		
 	}
 	
-	public record Page (Long pageQuantidade,Boolean hasProxima) {}
+	public record Page (Long totalRegistros, Long pageQuantidade,Boolean hasProxima) {}
 	public static Page infoPaginas(PaginacaoQueryParams paginacao,Long totalRegistros,Integer registrosNaPagina) {
 		
 		Long totalPaginas = totalRegistros / paginacao.getNroLinhas() + (totalRegistros % paginacao.getNroLinhas() == 0 ? 0 : 1);
 		
 		if (registrosNaPagina < paginacao.getNroLinhas())
-			return new Page(totalPaginas, false);
+			return new Page(totalRegistros,totalPaginas, false);
 
 		return new Page(
+				totalRegistros,
 				totalPaginas,
 				(paginacao.getNroLinhas() * paginacao.getNroPagina() < totalRegistros)
 				);
