@@ -63,7 +63,7 @@ public class AlertaResource {
 	}
 	
 	@POST
-	public Response salvarNovoAlerta(final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
+	public Response salvarNovoAlerta(@Valid final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
 		
 		Alerta alerta = new Alerta(
 				Alerta.toAlerta(novoAlerta.tipoAlerta()), novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin(),novoAlerta.destinatarios()
@@ -81,7 +81,7 @@ public class AlertaResource {
 	 */
 	@PUT
 	@Path("/{idAlerta}")
-	public Response atualizarAlerta(@PathParam("idAlerta") final Long idAlerta, final AtualizarAlerta atualizar) {
+	public Response atualizarAlerta(@PathParam("idAlerta") final Long idAlerta, @Valid final AtualizarAlerta atualizar) {
 
 		Alerta alerta = alertaDao.buscarPorId(idAlerta)
 				.orElseThrow(() ->  new ErroNegocioException("O alerta especificado não foi encontrado"));

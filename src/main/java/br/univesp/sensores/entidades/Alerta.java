@@ -97,6 +97,9 @@ public class Alerta implements Serializable {
 		validarIntervalo(intervaloEsperaSegundos);
 		validarEmails(destinatarios);
 		
+		if (vlMax != null && vlMin != null && vlMax.compareTo(vlMin) <= 0 )
+			throw new ErroNegocioException("O valor mínimo não pode ser igual ou maior que o valor máximo");
+		
 		this.tipoAlerta = tipoAlerta.getCodigo();
 		this.intervaloEsperaSegundos = intervaloEsperaSegundos;
 		this.vlMax = vlMax;
