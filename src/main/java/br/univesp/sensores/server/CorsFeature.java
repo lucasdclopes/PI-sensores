@@ -47,7 +47,7 @@ public class CorsFeature implements Feature {
 
 			corsFilter = new CorsFilter();					
 			corsFilter.getAllowedOrigins().addAll(listaUrlsPermitidasCors);
-
+			corsFilter.setExposedHeaders("*");
 			corsFilter.setAllowCredentials(true);		
 			context.register(corsFilter);
 			return true;
