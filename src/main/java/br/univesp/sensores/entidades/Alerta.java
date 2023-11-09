@@ -92,13 +92,13 @@ public class Alerta implements Serializable {
 
 	public Alerta(TipoAlerta tipoAlerta, Integer intervaloEsperaSegundos, BigDecimal vlMax, BigDecimal vlMin, String destinatarios) {
 		if (vlMax == null && vlMin == null)
-			throw new ErroNegocioException("Pelo menos o valor mínimo ou valor máximo precisa estar preenchido. Ambos estão vazis");
+			throw new ErroNegocioException("Pelo menos o valor mínimo ou valor máximo precisa estar preenchido. Ambos estão vazios");
 		
 		validarIntervalo(intervaloEsperaSegundos);
 		validarEmails(destinatarios);
 		
 		if (vlMax != null && vlMin != null && vlMax.compareTo(vlMin) <= 0 )
-			throw new ErroNegocioException("O valor mínimo não pode ser igual ou maior que o valor máximo");
+			throw new ErroNegocioException("O valor do limite mínimo não pode ser igual ou maior que o valor do limite máximo");
 		
 		this.tipoAlerta = tipoAlerta.getCodigo();
 		this.intervaloEsperaSegundos = intervaloEsperaSegundos;
