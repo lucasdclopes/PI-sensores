@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.logging.Logger;
-
 import br.univesp.sensores.dto.responses.MedicaoItemResp;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
@@ -37,7 +35,7 @@ import jakarta.persistence.Table;
 @Table(name = "alerta")
 public class Alerta implements Serializable {
 	
-	private static final Logger LOGGER = Logger.getLogger( Alerta.class.getName());
+	//private static final Logger LOGGER = Logger.getLogger( Alerta.class.getName());
 
 	public static TipoAlerta toAlerta(Integer codigo) {
 		return EnumHelper.getEnumFromCodigo(codigo,TipoAlerta.class);
@@ -62,7 +60,7 @@ public class Alerta implements Serializable {
 		
 		@Override
 		public String getDescricao() {
-			return "Tipo de alerta";
+			return "Tipo de sensor";
 		}
 	}
 	

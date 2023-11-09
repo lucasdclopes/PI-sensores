@@ -2,6 +2,8 @@ package br.univesp.sensores.erros;
 
 import java.time.LocalDateTime;
 
+import org.jboss.logging.Logger;
+
 import br.univesp.sensores.dao.LogErrosDao;
 import br.univesp.sensores.dto.responses.ResponseSimples;
 import br.univesp.sensores.entidades.LogErrosSistema;
@@ -19,6 +21,9 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class ErrorRequestHandler implements ExceptionMapper<Exception> {
 		
+	private static final Logger LOGGER = Logger.getLogger( ErrorRequestHandler.class.getName());
+	
+	private final static String MSG_GENERICA = "Ocorreu um erro inesperado. Contate o administrador para consultar os logs";
 	@Inject private LogErrosDao errosDao;
 	
 	@Override
@@ -44,7 +49,12 @@ public class ErrorRequestHandler implements ExceptionMapper<Exception> {
 			return Response.status(Status.NOT_FOUND).entity(new ResponseSimples("endereço inválido")).build();
 		}
 		
-		errosDao.salvar(new LogErrosSistema(LocalDateTime.now(), e));
+		try {
+			errosDao.salvar(new LogErrosSistema(LocalDateTime.now(), e));
+		} catch (Exception ex) {
+			LOGGER.fatal("Não foi possível logar um erro geral",e);
+			return Response.status(500).entity(new ResponseSimples(MSG_GENERICA)).build();
+		}
 		
 		//erro tratado
 		if (e instanceof ErroNegocioException) {
@@ -52,7 +62,6 @@ public class ErrorRequestHandler implements ExceptionMapper<Exception> {
 		} 
 		
 		Integer status = 500;
-		final String MSG_GENERICA = "Ocorreu um erro inesperado. Contate o administrador para consultar os logs";
 		String msgErroUsuario = MSG_GENERICA;
 		if (e instanceof NotSupportedException err) {
 			status = 415;
