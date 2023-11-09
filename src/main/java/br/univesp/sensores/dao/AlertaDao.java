@@ -1,5 +1,6 @@
 package br.univesp.sensores.dao;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import br.univesp.sensores.dto.responses.AlertaItemResp;
 import br.univesp.sensores.dto.responses.AlertaListaResp;
 import br.univesp.sensores.dto.responses.AlertasEnviadosListaResp;
 import br.univesp.sensores.entidades.Alerta;
+import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -48,7 +50,8 @@ public class AlertaDao {
 				);
 	}
 	
-	public AlertaListaResp listar(final PaginacaoQueryParams paginacao, final DtParams dtParams) {
+	public static record FiltrosAlerta (TipoAlerta tipoAlerta, BigDecimal vlMax, BigDecimal vlMin) {}
+	public AlertaListaResp listar(final PaginacaoQueryParams paginacao, final DtParams dtParams, Optional<FiltrosAlerta> filtros) {
 		
 		String where = "WHERE 1 = 1 ";
 		String jpql = """
@@ -61,7 +64,27 @@ public class AlertaDao {
 		Map<String,Object> params = new HashMap<>();
 		
 		where += DaoHelper.addWhereRangeData(params, dtParams, "a.dtCriado");
-		jpql += orderBy;
+		
+		if (filtros.isPresent()) {
+			FiltrosAlerta filtro = filtros.get();
+			
+			if (filtro.tipoAlerta != null) {
+				where += " AND tipoAlerta = :tipoAlerta ";
+				params.put("tipoAlerta", filtro.tipoAlerta.getCodigo());
+			}
+			
+			if (filtro.vlMin != null) {
+				where += " AND vlMin = :vlMin ";
+				params.put("vlMin", filtro.vlMin);
+			}
+			
+			if (filtro.vlMax != null) {
+				where += " AND vlMax = :vlMax ";
+				params.put("vlMax", filtro.vlMax);
+			}
+		}
+		
+		jpql += where + orderBy;
 		
 		TypedQuery<AlertaItemResp> query = em.createQuery(jpql, AlertaItemResp.class);
 		params.forEach(query::setParameter);

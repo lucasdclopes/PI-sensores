@@ -1,13 +1,19 @@
 package br.univesp.sensores.resources;
 
+import java.util.List;
+import java.util.Optional;
+
 import br.univesp.sensores.dao.AlertaDao;
+import br.univesp.sensores.dao.AlertaDao.FiltrosAlerta;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.AtualizarAlerta;
 import br.univesp.sensores.dto.requests.NovoAlerta;
+import br.univesp.sensores.dto.responses.AlertaItemResp;
 import br.univesp.sensores.dto.responses.AlertaListaResp;
 import br.univesp.sensores.dto.responses.AlertasEnviadosListaResp;
 import br.univesp.sensores.entidades.Alerta;
+import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.erros.ErroNegocioException;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -39,7 +45,7 @@ public class AlertaResource {
 	@GET
 	public Response getAlertas(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams ) {
 		
-		AlertaListaResp db = alertaDao.listar(paginacao,dtParams);
+		AlertaListaResp db = alertaDao.listar(paginacao,dtParams,Optional.empty());
 		if (db.alerta().isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		
@@ -68,10 +74,17 @@ public class AlertaResource {
 	public Response salvarNovoAlerta(@Valid final NovoAlerta novoAlerta, @Context UriInfo uriInfo) {
 		
 		Integer limite = ConfigHelper.getInstance().getConfigInteger(Chaves.ALERTA_LIMITE_TOTAL);
-		AlertaListaResp listar = alertaDao.listar(new PaginacaoQueryParams(100, 1), null);
+		AlertaListaResp listar = alertaDao.listar(new PaginacaoQueryParams(100, 1), null,Optional.empty());
 		if (listar.page().totalRegistros() > limite)
 			throw new ErroNegocioException("Não é possível criar mais do que " + limite + " alertas. Exclua um alerta existente para poder criar um novo");
-			
+
+		TipoAlerta tipoAlerta = Alerta.toAlerta(novoAlerta.tipoAlerta());
+		List<AlertaItemResp> existente = alertaDao.listar(
+				new PaginacaoQueryParams(100, 1), null,Optional.of(new FiltrosAlerta(tipoAlerta, novoAlerta.vlMax(), novoAlerta.vlMin()))
+				).alerta();
+		if (!existente.isEmpty())
+			throw new ErroNegocioException("O alerta #" + existente.get(0).idAlerta() + " já possuí os mesmos parâmetros de monitoramento");
+		
 		Alerta alerta = new Alerta(
 				Alerta.toAlerta(novoAlerta.tipoAlerta()), novoAlerta.intervaloEsperaSegundos(), novoAlerta.vlMax(), novoAlerta.vlMin(),novoAlerta.destinatarios()
 				);
