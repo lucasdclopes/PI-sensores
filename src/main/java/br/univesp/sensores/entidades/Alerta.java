@@ -163,6 +163,7 @@ public class Alerta implements Serializable {
 		String template = ConfigHelper.getInstance().getEmailTemplateEmailAlerta();
 		return template
 				.replace("${tipoAlerta}", this.getTipoAlerta().getDescAmigavel())
+				.replace("${idAlerta}", this.getIdAlerta().toString())
 				.replace("${vlTemperatura}", medicao.vlTemperatura().toPlainString())
 				.replace("${vlUmidade}", medicao.vlUmidade().toPlainString())
 				.replace("${dtCriacao}", this.getDtCriado().format(datePattern))
