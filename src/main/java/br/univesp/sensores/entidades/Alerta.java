@@ -166,8 +166,8 @@ public class Alerta implements Serializable {
 				.replace("${vlTemperatura}", medicao.vlTemperatura().toPlainString())
 				.replace("${vlUmidade}", medicao.vlUmidade().toPlainString())
 				.replace("${dtCriacao}", this.getDtCriado().format(datePattern))
-				.replace("${vlMin}", this.getVlMin().toPlainString())
-				.replace("${vlMax}", this.getVlMax().toPlainString())
+				.replace("${vlMin}", this.getVlMin()!=null?this.getVlMin().toPlainString():"N/A")
+				.replace("${vlMax}", this.getVlMax()!=null?this.getVlMax().toPlainString():"N/A")
 				.replace("${dtUltimoEnvio}",this.dtUltimoEnvio == null? "N/A" : this.dtUltimoEnvio.format(datePattern));
 	}
 	
