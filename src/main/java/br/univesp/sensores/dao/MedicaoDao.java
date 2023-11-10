@@ -17,6 +17,7 @@ import br.univesp.sensores.helpers.EnumHelper;
 import br.univesp.sensores.helpers.EnumHelper.IEnumDescritivel;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -176,7 +177,13 @@ public class MedicaoDao {
 		for (Object param : params) {
 			qCount.setParameter(iParams++, param);
 		}
-		Integer rsCount = (Integer)qCount.getSingleResult();
+		
+		Integer rsCount = null;
+		try {
+			rsCount = (Integer)qCount.getSingleResult();
+		} catch (NoResultException e) {
+			rsCount = 0;
+		}
 		
 		return new MedicaoListaResp(
 				DaoHelper.infoPaginas(paginacao, rsCount.longValue(), resultList.size()),
