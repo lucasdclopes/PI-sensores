@@ -1,6 +1,7 @@
 package br.univesp.sensores.resources;
 
 import br.univesp.sensores.dao.MedicaoDao;
+import br.univesp.sensores.dao.MedicaoDao.TipoAgrupamento;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
@@ -35,12 +36,18 @@ public class MedicaoResource {
 	
 	@GET
 	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams, 
-			@Valid @QueryParam("tempoReal") final boolean tempoReal) {
+			@Valid @QueryParam("tempoReal") final boolean tempoReal, @Valid @QueryParam("tipoAgrupamento") final Integer tipoAgrupamento) {
 		
 		if (!tempoReal) 
 			paginacao.overrideMaxItens(1000);
 		
-		MedicaoListaResp medicoes = medicaoDao.listar(paginacao,dtParams,tempoReal);
+		MedicaoListaResp medicoes = null;
+		if (tipoAgrupamento != null) {
+			TipoAgrupamento agrupamento = TipoAgrupamento.toAgrupamento(tipoAgrupamento);
+			medicoes = medicaoDao.listarAgrupado(paginacao, dtParams, agrupamento);
+		} else 
+			medicoes = medicaoDao.listar(paginacao,dtParams,tempoReal);
+		
 		if (medicoes.medicoes().isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		
