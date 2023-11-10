@@ -37,6 +37,9 @@ public class MedicaoResource {
 	public Response getSensores(@Valid @BeanParam final PaginacaoQueryParams paginacao, @Valid @BeanParam final DtParams dtParams, 
 			@Valid @QueryParam("tempoReal") final boolean tempoReal) {
 		
+		if (!tempoReal) 
+			paginacao.overrideMaxItens(1000);
+		
 		MedicaoListaResp medicoes = medicaoDao.listar(paginacao,dtParams,tempoReal);
 		if (medicoes.medicoes().isEmpty())
 			return Response.status(Status.NO_CONTENT).build();

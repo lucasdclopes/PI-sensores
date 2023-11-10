@@ -7,8 +7,9 @@ import jakarta.ws.rs.QueryParam;
 
 public class PaginacaoQueryParams {
 	
-	private Integer MAX_ITENS = ConfigHelper.getInstance()
+	private final Integer MAX_ITENS = ConfigHelper.getInstance()
 			.getConfigInteger(Chaves.PAGINACAO_MAX_ITENS);
+	private Integer maxItensAtual = MAX_ITENS;
 	
 	@QueryParam("size") 
 	protected Integer nroLinhas;
@@ -21,11 +22,14 @@ public class PaginacaoQueryParams {
 		this.nroLinhas = nroLinhas;
 		this.nroPagina = nroPagina;
 	}
+	public void overrideMaxItens (Integer maxItens) {
+		this.maxItensAtual = maxItens;
+	}
 	public Integer getNroLinhas(){
 		if (nroLinhas == null || nroLinhas < 1)
 			nroLinhas = 20;
-		if (nroLinhas > MAX_ITENS)
-			nroLinhas = MAX_ITENS;
+		if (nroLinhas > maxItensAtual)
+			nroLinhas = maxItensAtual;
 		return nroLinhas;
 	}
 	/**

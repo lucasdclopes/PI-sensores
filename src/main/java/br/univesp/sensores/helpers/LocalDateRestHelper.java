@@ -17,9 +17,9 @@ public class LocalDateRestHelper {
 	
 	private final static DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE_TIME; 
 	
+	
 	@Provider
 	public static class LocalDateParamConverterProvider implements ParamConverterProvider {
-
 	    @SuppressWarnings("unchecked") //não há necessidade de checagem pelo type, neste caso é garantido pelo framework
 		@Override
 	    public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType,//java.lang.reflect.Type;
