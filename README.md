@@ -39,15 +39,15 @@ Os dados de acesso ao banco de dados ficam configurados nos DataSources do WildF
 
 Este é um projeto feito em grupo, foi necessário elaborar o tema, realizar reuniões, escolher e montar os sensores de hardware, montar a estrutura do banco de dados, desenhar a UX, desenvolver o front e backend e realizar testes. Além da extensa e trabalhosa documentação escrita, que não está inclusa neste repositório.
 
-Integrantes **está incompleto**:
+Integrantes:
 
 **Bruno de Freitas**
 
-**Fabio**
+**José Fábio dos Santos**
 
 **Lucas de Carvalho Lopes**
 
 **Lucas Goss Dias**
 
-**Luiz**
+**Luiz Andrade Rosa**
 
