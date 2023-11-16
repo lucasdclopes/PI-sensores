@@ -4,12 +4,10 @@
 #include <HTTPClient.h>
 #include <DHT.h>
 
-//const char *ssid = "Lan SUPORTE";
-//const char *password = "12345678";
-const char *ssid = "bacon";
-const char *password = "Chedd4r!";
+const char *ssid = "your_wifi_ssid";
+const char *password = "your_wifi_password";
 
-const char *serverAddr = "http://192.168.0.143:8080/PI-sensores/api/medicao?showIntervalo=true";
+const char *serverAddr = "http://YOUR_BACKEND_ADDRESS/api/medicao?showIntervalo=true";
 
 unsigned int lastTime = 0;
 unsigned int timer_Delay_Minimo = 5000;
