@@ -1,10 +1,14 @@
-# PI-sensores (Este documento é um TODO, não está completo)
+# PI-sensores
 
 ## Sobre
 
-Este projeto é do PI (Projeto Integrador) do curso de Engenheria de Computação da Univesp. O principal tema é a utilização e integração de sensores IoT
+Este projeto é do PI (Projeto Integrador) do curso de Engenheria de Computação da Univesp. O principal tema é a utilização e integração de sensores IoT.
+
+O Sistema trabalha com um sensor de temperatura e umidade relativa do ar ESP32, que envia estes dados via HTTP POST para um servidor Java.
 
 Este repositório contém o backend. O frontend pode ser encontrado no outro repositório: https://github.com/lucasdclopes/PI-sensores-Frontend
+
+O código fonte do ESP32 se encontra no arquivo https://github.com/lucasdclopes/PI-sensores/blob/main/ESP32-DHT-HttpClient.ino
 
 O backend é feito em Java, utiliza o Framework Jakarta EE10 e o servidor WildFly.
 
