@@ -22,6 +22,11 @@ O servidor de aplicação e Web é o WildFly 30.0.0.Final (https://www.wildfly.o
 
 A IDE utilizada é o Eclipse, mas pode-se trabalhar com a IDE de sua preferência
 
+## Hardware ESP32
+
+Sensor de temperatura e umidade: DHT11
+WiFi: ESP32 ESP-WROOM-32 DEVKit V1
+
 ## Banco de dados
 
 Os arquivos para criar o banco de dados estão no root do repositório.
