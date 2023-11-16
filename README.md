@@ -8,7 +8,7 @@ O Sistema trabalha com um sensor de temperatura e umidade relativa do ar ESP32, 
 
 Este repositório contém o backend. O frontend pode ser encontrado no outro repositório: https://github.com/lucasdclopes/PI-sensores-Frontend
 
-O código fonte do ESP32 se encontra no arquivo https://github.com/lucasdclopes/PI-sensores/blob/main/ESP32-DHT-HttpClient.ino
+O código fonte do ESP32 se encontra no arquivo 'ESP32-DHT-HttpClient.ino'
 
 O backend é feito em Java, utiliza o Framework Jakarta EE10 e o servidor WildFly.
 
