@@ -25,6 +25,7 @@ A IDE utilizada é o Eclipse, mas pode-se trabalhar com a IDE de sua preferênci
 ## Hardware ESP32
 
 Sensor de temperatura e umidade: DHT11
+
 WiFi: ESP32 ESP-WROOM-32 DEVKit V1
 
 ## Banco de dados
