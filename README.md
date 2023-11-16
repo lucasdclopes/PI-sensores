@@ -4,11 +4,9 @@
 
 Este projeto é do PI (Projeto Integrador) do curso de Engenheria de Computação da Univesp. O principal tema é a utilização e integração de sensores IoT.
 
-O Sistema trabalha com um sensor de temperatura e umidade relativa do ar ESP32, que envia estes dados via HTTP POST para um servidor Java.
+O Sistema trabalha com um sensor de temperatura e umidade relativa do ar ESP32, que envia estes dados via HTTP POST para o back-end deste repositório.
 
 Este repositório contém o backend. O frontend pode ser encontrado no outro repositório: https://github.com/lucasdclopes/PI-sensores-Frontend
-
-O código fonte do ESP32 se encontra no arquivo `ESP32-DHT-HttpClient.ino` no root do repositório. Lembre-se de ajustar as variáveis `ssid`, `password ` e `serverAddr`. Foi utilizada a Arduino IDE.
 
 O backend é feito em Java, utiliza o Framework Jakarta EE10 e o servidor WildFly.
 
@@ -23,6 +21,10 @@ O servidor de aplicação e Web é o WildFly 30.0.0.Final (https://www.wildfly.o
 A IDE utilizada é o Eclipse, mas pode-se trabalhar com a IDE de sua preferência
 
 ## Hardware ESP32
+
+O código fonte do ESP32 se encontra no arquivo `ESP32-DHT-HttpClient.ino` no root do repositório. Lembre-se de ajustar as variáveis `ssid`, `password ` e `serverAddr`. 
+
+IDE: Arduino IDE 1.8.19
 
 Sensor de temperatura e umidade: DHT11
 
