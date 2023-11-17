@@ -4,10 +4,10 @@
 #include <HTTPClient.h>
 #include <DHT.h>
 
-const char *ssid = "your_wifi_ssid";
-const char *password = "your_wifi_password";
+const char *ssid = "ssid_do_seu_wifi";
+const char *password = "senha_do_seu_wifi";
 
-const char *serverAddr = "http://YOUR_BACKEND_ADDRESS/api/medicao?showIntervalo=true";
+const char *serverAddr = "http://ENDERECO_HTTP_BACKEND/api/medicao?showIntervalo=true";
 
 unsigned int lastTime = 0;
 unsigned int timer_Delay_Minimo = 5000;
@@ -24,7 +24,7 @@ void setup(void) {
   WiFi.begin(ssid, password);
   Serial.println("");
 
-  // Wait for connection
+  // Aguarda a conexão wifi
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -42,11 +42,11 @@ void setup(void) {
 }
 
 void loop(void) {
-  //Send an HTTP POST request every x minutes
+  //Envia uma requisição HTTP POST request a cada x segundos
   if (!((millis() - lastTime) > timerDelay)) {
     return;
   }
-  //Check WiFi connection status
+  //Verifica status do WiFi
   if(!(WiFi.status()== WL_CONNECTED)){
     Serial.println("WiFi Disconnected");
     return;
@@ -57,7 +57,7 @@ void loop(void) {
   // endereço completo da requisição
   http.begin(serverAddr);
   
-  //caso precise de autorixação http
+  //caso precise de autorização http
   //http.setAuthorization("REPLACE_WITH_SERVER_USERNAME", "REPLACE_WITH_SERVER_PASSWORD");
   
   http.addHeader("Content-Type", "application/json");
