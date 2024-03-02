@@ -1,7 +1,5 @@
 # PI-sensores
 
-O projeto em execução pode ser acessado no endereço http://35.80.96.120/
-
 ## Sobre
 
 Este projeto é do PI (Projeto Integrador) do curso de Engenheria de Computação da Univesp. O principal tema é a utilização e integração de sensores IoT.
