@@ -113,11 +113,21 @@ public class AlertaResource {
 				alerta.desabilitar();
 		}
 		
+		if (atualizar.habilitarDispositivo() != null) {
+			if (atualizar.habilitarDispositivo())
+				alerta.habilitarDispositivo();
+			else
+				alerta.desabilitarDispositivo();
+		}
+		
 		if (atualizar.intervaloEsperaSegundos() != null) 
 			alerta.alterarIntervalo(atualizar.intervaloEsperaSegundos());
 		
 		if (atualizar.destinatarios() != null)
 			alerta.alterarDestinatarios(atualizar.destinatarios());
+		
+		if (atualizar.vlMax() != null)
+			alerta.setVlMax(atualizar.vlMax());
 		
 		alertaDao.atualizar(alerta);
 		

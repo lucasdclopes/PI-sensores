@@ -77,6 +77,7 @@ public class Alerta implements Serializable {
 	private LocalDateTime dtCriado;
 	private String destinatarios;
 	private LocalDateTime dtUltimoEnvio; 
+	private Boolean habilitarDispositivo; 
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "alerta", orphanRemoval = true, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<AlertaEnviado> alertasEnviados = new HashSet<>();
@@ -115,6 +116,14 @@ public class Alerta implements Serializable {
 	
 	public void desabilitar() {
 		this.isHabilitado = false;
+	}
+	
+	public void habilitarDispositivo() {
+		this.habilitarDispositivo = true;
+	}
+	
+	public void desabilitarDispositivo() {
+		this.habilitarDispositivo = false;
 	}
 	
 	public void alterarDestinatarios(String destinatarios) {
@@ -211,6 +220,10 @@ public class Alerta implements Serializable {
 	public Integer getIntervaloEsperaSegundos() {
 		return intervaloEsperaSegundos;
 	}
+	
+	public void setVlMax(BigDecimal vlMax) {
+		this.vlMax = vlMax;
+	}
 
 	public BigDecimal getVlMax() {
 		return vlMax;
@@ -226,6 +239,10 @@ public class Alerta implements Serializable {
 	
 	public String getDestinatarios() {
 		return destinatarios;
+	}
+	
+	public Boolean deveHabilitarDispositivo() {
+		return habilitarDispositivo;
 	}
 
 	public Set<AlertaEnviado> getAlertasEnviados() {

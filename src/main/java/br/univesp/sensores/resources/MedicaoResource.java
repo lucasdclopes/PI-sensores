@@ -1,11 +1,20 @@
 package br.univesp.sensores.resources;
 
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+import br.univesp.sensores.dao.AlertaDao;
 import br.univesp.sensores.dao.MedicaoDao;
 import br.univesp.sensores.dao.MedicaoDao.TipoAgrupamento;
 import br.univesp.sensores.dto.queryparams.DtParams;
 import br.univesp.sensores.dto.queryparams.PaginacaoQueryParams;
 import br.univesp.sensores.dto.requests.NovaMedicao;
 import br.univesp.sensores.dto.responses.MedicaoListaResp;
+import br.univesp.sensores.dto.responses.NovaMedicaoResponse;
+import br.univesp.sensores.entidades.Alerta;
+import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.entidades.MedicaoSensor;
 import br.univesp.sensores.helpers.ConfigHelper;
 import br.univesp.sensores.helpers.ConfigHelper.Chaves;
@@ -32,6 +41,7 @@ import jakarta.ws.rs.core.UriInfo;
 public class MedicaoResource {
 	
 	@Inject MedicaoDao medicaoDao;
+	@Inject AlertaDao alertaDao;
 	
 	
 	@GET
@@ -58,16 +68,25 @@ public class MedicaoResource {
 	}
 	
 	@POST
-	public Response salvarMedicao(final NovaMedicao novaMedicao, @Context UriInfo uriInfo, @QueryParam("showIntervalo") final boolean showIntervalo) {
+	public Response salvarMedicao(final NovaMedicao novaMedicao, @Context UriInfo uriInfo) {
 		
 		MedicaoSensor med = new MedicaoSensor(novaMedicao.vlTemperatura(), novaMedicao.vlUmidade());
 		Long id = medicaoDao.salvarMedicao(med);
+				
+		/*mostra o intervalo de tempo que o dispositivo vai esperar até a próxima execução
+		e carrega o alerta que define com que temperatura o dispositivo será acionado
+		*/
+		NovaMedicaoResponse response = new NovaMedicaoResponse(
+				ConfigHelper.getInstance().getConfigInteger(Chaves.MONITORAMENTO_INTERVALO), 
+				alertaDao.buscarAlertasValidos().stream()
+				.filter(a -> a.deveHabilitarDispositivo() && a.getTipoAlerta() == TipoAlerta.TEMPERATURA)
+				.sorted(Comparator.comparing(Alerta::getVlMax))
+				.map(Alerta::getVlMax)
+				.findFirst()
+				.orElse(BigDecimal.ZERO)
+				);
 		
-		ResponseBuilder builder = Response.created(ResourceHelper.montarLocation(uriInfo,id));
-		if (showIntervalo) 
-			builder = builder.entity(ConfigHelper.getInstance().getConfigInteger(Chaves.MONITORAMENTO_INTERVALO));
-			
-		return builder.build();
+		return Response.created(ResourceHelper.montarLocation(uriInfo,id)).entity(response).build();
 		
 	}
 

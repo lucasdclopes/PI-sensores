@@ -17,6 +17,7 @@ import br.univesp.sensores.entidades.Alerta.TipoAlerta;
 import br.univesp.sensores.helpers.DaoHelper;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -115,6 +116,26 @@ public class AlertaDao {
 		
 		return em.createQuery(jpql, Alerta.class).getResultList();
 	}
+	/*
+	public Optional<Alerta> buscarAlertaComDispositivo(){
+		String jpql = """
+				select top 1 a from Alerta a
+				WHERE 
+				a.isHabilitado = true
+				and
+				a.tipoAlerta = """
+				+ TipoAlerta.TEMPERATURA.getCodigo() + " " +  
+				"""
+				order by a.vlMax asc
+				""";
+		try {
+			return Optional.of(
+					em.createQuery(jpql, Alerta.class).getSingleResult()
+					);
+		} catch (NoResultException e) {
+			return Optional.empty();
+		}
+	}*/
 	
 	public AlertasEnviadosListaResp listarEnviados(final Long idAlerta, final PaginacaoQueryParams paginacao){
 		
